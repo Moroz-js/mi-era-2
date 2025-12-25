@@ -1,26 +1,37 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Brand Colors - Primary */
+  --color-brand-yellow: #FFD700;
+  --color-brand-violet: #915AFF;
+  --color-brand-red: #FE2C2B;
+  
+  /* Brand Colors - Secondary */
+  --color-brand-blue: #3755F0;
+  --color-brand-green: #57BD2D;
+  --color-brand-orange: #FF7B1C;
+  
+  /* Brand Colors - Neutral */
+  --color-brand-black: #000000;
+  --color-brand-white: #FFFFFF;
+  --color-brand-light-gray: #E6E6E6;
+  --color-brand-gray: #BDBDBD;
+  
+  /* Typography */
+  --font-heading: 'Special Gothic Expanded', sans-serif;
+  --font-body: 'Lexend', sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
 }
