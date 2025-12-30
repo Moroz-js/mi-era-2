@@ -57,23 +57,13 @@ export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
             </p>
 
             {/* CTA Button */}
-            <div className="mb-6">
-              <Button 
-                variant="primary" 
-                size="lg"
-                onClick={handleCTAClick}
-              >
-                {ctaText}
-              </Button>
-            </div>
-
-            {/* Own your era text */}
-            <p 
-              className="text-sm text-brand-black font-medium"
-              style={{ fontFamily: 'var(--font-body)' }}
+            <Button 
+              variant="primary" 
+              size="lg"
+              onClick={handleCTAClick}
             >
-              Own your era
-            </p>
+              {ctaText}
+            </Button>
           </div>
 
           {/* Right Column - App Screenshots with Abstract Visuals */}
