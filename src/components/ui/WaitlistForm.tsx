@@ -130,7 +130,7 @@ export function WaitlistForm({ onSuccess, onError }: WaitlistFormProps) {
             size="lg"
             disabled={state.isSubmitting || !state.email}
             type="submit"
-            className="w-full hover:!bg-brand-white hover:!text-brand-black"
+            className="w-full hover:!bg-brand-yellow hover:!text-brand-black"
           >
             {state.isSubmitting ? 'Joining...' : 'Join the waitlist'}
           </Button>

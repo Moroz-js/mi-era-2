@@ -20,7 +20,7 @@ export default function TermsOfUse() {
                 </p>
                 
                 <p className="mb-6">
-                  This is a placeholder for the mi-Era Terms of Use. The actual terms of use content will be provided by the legal team and inserted here.
+                  This is a placeholder for the Mi-Era Terms of Use. The actual terms of use content will be provided by the legal team and inserted here.
                 </p>
                 
                 <p className="mb-6">

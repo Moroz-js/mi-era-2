@@ -20,7 +20,7 @@ export default function PrivacyPolicy() {
                 </p>
                 
                 <p className="mb-6">
-                  This is a placeholder for the mi-Era Privacy Policy. The actual privacy policy content will be provided by the legal team and inserted here.
+                  This is a placeholder for the Mi-Era Privacy Policy. The actual privacy policy content will be provided by the legal team and inserted here.
                 </p>
                 
                 <p className="mb-6">

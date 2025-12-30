@@ -1,8 +1,8 @@
 'use client';
 
-import { Header, Footer, WaitlistForm } from "../src/components/ui";
+import { Header, Footer } from "../src/components/ui";
 import { Hero, Statistics, Benefits, KeyFeatures, HowItWorks, Testimonials, Pricing, DownloadCTA, FAQ } from "../src/components/sections";
-import { StarIcon } from "../src/components/icons/StarIcon";
+import { CheckCircleIcon, ShieldIcon, TargetIcon, HeartIcon, LightbulbIcon, TrophyIcon } from "../src/components/icons/BenefitIcons";
 
 export default function Home() {
   // Hero section content
@@ -23,89 +23,90 @@ export default function Home() {
     stats: [
       {
         value: "0",
-        label: "Guilt trips",
-        description: "We don't do pressure here",
+        label: "pressure",
+        description: "Just a calm space to build your routine",
       },
       {
         value: "100%",
-        label: "Your pace",
-        description: "Move at your own speed",
-      },
-      {
-        value: "∞",
-        label: "Fresh starts",
-        description: "Every day is a new chance",
-      },
-      {
-        value: "1",
-        label: "You",
-        description: "This is your space",
+        label: "yours",
+        description: "Your tasks, your way, your privacy",
       },
       {
         value: "24/7",
-        label: "Support",
-        description: "AI that's always there",
+        label: "support",
+        description: "AI assistant ready when you need it",
+      },
+      {
+        value: "∞",
+        label: "chances",
+        description: "Every day is a fresh start",
+      },
+      {
+        value: "1",
+        label: "you",
+        description: "Built for your unique brain and pace",
       },
     ],
   };
 
   // Benefits section content
   const benefitsData = {
-    heading: "Why Mi-Era gets you",
+    heading: "Why Mi-Era works",
+    subheading: "Because it's designed for how you actually think and feel, not how productivity apps think you should.",
     benefits: [
       {
         icon: (
-          <div className="w-16 h-16 bg-brand-violet rounded-full flex items-center justify-center text-brand-white text-2xl font-bold">
-            ✓
+          <div className="w-16 h-16 bg-brand-yellow rounded-lg flex items-center justify-center">
+            <CheckCircleIcon size={32} color="#000000" />
           </div>
         ),
-        title: "No guilt, no pressure",
-        description: "Missed a task? That's okay. We're here to help you move forward, not make you feel bad.",
+        title: "Structure without stress",
+        description: "Build routines that actually work for your brain. No guilt if things don't go perfectly.",
       },
       {
         icon: (
-          <div className="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center text-brand-white text-2xl font-bold">
-            🔒
+          <div className="w-16 h-16 bg-brand-yellow rounded-lg flex items-center justify-center">
+            <LightbulbIcon size={32} color="#000000" />
+          </div>
+        ),
+        title: "AI that gets you",
+        description: "Your assistant learns how you think and helps you plan in a way that feels natural, not forced.",
+      },
+      {
+        icon: (
+          <div className="w-16 h-16 bg-brand-yellow rounded-lg flex items-center justify-center">
+            <ShieldIcon size={32} color="#000000" />
           </div>
         ),
         title: "Total privacy",
-        description: "Your thoughts, your tasks, your emotions—completely private. No one else sees them.",
+        description: "Your space. Your thoughts. No parents peeking. No tracking. No surveillance.",
       },
       {
         icon: (
-          <div className="w-16 h-16 bg-brand-green rounded-full flex items-center justify-center text-brand-white text-2xl font-bold">
-            🤖
+          <div className="w-16 h-16 bg-brand-yellow rounded-lg flex items-center justify-center">
+            <TrophyIcon size={32} color="#000000" />
           </div>
         ),
-        title: "AI that actually helps",
-        description: "Not a chatbot that sounds like a corporate manual. Real support that understands you.",
+        title: "Progress that feels good",
+        description: "Celebrate small wins with rewards that remind you: you're building something real.",
       },
       {
         icon: (
-          <div className="w-16 h-16 bg-brand-orange rounded-full flex items-center justify-center text-brand-white text-2xl font-bold">
-            🎯
+          <div className="w-16 h-16 bg-brand-yellow rounded-lg flex items-center justify-center">
+            <TargetIcon size={32} color="#000000" />
           </div>
         ),
         title: "Focus without overwhelm",
-        description: "See what matters today. Not a million things at once.",
+        description: "Break down big tasks into doable steps. One thing at a time. You've got this.",
       },
       {
         icon: (
-          <div className="w-16 h-16 bg-brand-red rounded-full flex items-center justify-center text-brand-white text-2xl font-bold">
-            💭
+          <div className="w-16 h-16 bg-brand-yellow rounded-lg flex items-center justify-center">
+            <HeartIcon size={32} color="#000000" />
           </div>
         ),
-        title: "Track your emotions",
-        description: "Understand how you're feeling and what affects your mood. No judgment, just awareness.",
-      },
-      {
-        icon: (
-          <div className="w-16 h-16 bg-brand-yellow rounded-full flex items-center justify-center text-brand-black text-2xl font-bold">
-            ⭐
-          </div>
-        ),
-        title: "Celebrate every win",
-        description: "Small progress is still progress. We help you see how far you've come.",
+        title: "Emotional balance",
+        description: "Journal your feelings, track your mood, understand yourself better. All in one place.",
       },
     ],
   };
@@ -116,9 +117,9 @@ export default function Home() {
     subheading: "Simple tools that work together to help you stay on track and feel good about your progress.",
     features: [
       {
-        icon: <StarIcon size={48} color="#57BD2D" />,
+        icon: <span className="text-2xl">⭐</span>,
         title: "App is adaptive to your behavior",
-        description: "The more you use mi-Era, the better it understands your patterns. It learns when you work best, what motivates you, and how to support you without being pushy.",
+        description: "The more you use Mi-Era, the better it understands your patterns. It learns when you work best, what motivates you, and how to support you without being pushy.",
         screenshot: {
           src: "/placeholders/adaptive-behavior.png",
           alt: "Adaptive Behavior Screenshot",
@@ -127,7 +128,7 @@ export default function Home() {
         layout: "right" as const,
       },
       {
-        icon: <StarIcon size={48} color="#3755F0" />,
+        icon: <span className="text-2xl">⭐</span>,
         title: "Emotional Journal",
         description: "Track how you're feeling alongside your tasks. See patterns, understand what affects your mood, and learn what helps you feel better.",
         screenshot: {
@@ -138,7 +139,7 @@ export default function Home() {
         layout: "left" as const,
       },
       {
-        icon: <StarIcon size={48} color="#FE2C2B" />,
+        icon: <span className="text-2xl">⭐</span>,
         title: "Progress and Rewards",
         description: "Celebrate every step forward. See your streaks, track your wins, and feel good about what you've accomplished—no matter how small.",
         screenshot: {
@@ -158,7 +159,7 @@ export default function Home() {
       {
         number: 1,
         title: "Add your tasks",
-        description: "Write down what you need to do. No pressure, just get it out of your head.",
+        description: "Write down what you need to do. No pressure, just clarity.",
       },
       {
         number: 2,
@@ -168,7 +169,7 @@ export default function Home() {
       {
         number: 3,
         title: "Get AI support",
-        description: "Chat with an AI that actually gets it. No judgment, just help when you need it.",
+        description: "Chat with an AI that gets it. No judgment, just help.",
       },
       {
         number: 4,
@@ -188,12 +189,12 @@ export default function Home() {
         role: "Student",
       },
       {
-        quote: "My daughter has been using mi-Era for two months and I've seen a real change. She's more aware of her emotions and less stressed about school. I'm grateful for this tool.",
+        quote: "My daughter has been using Mi-Era for two months and I've seen a real change. She's more aware of her emotions and less stressed about school. I'm grateful for this tool.",
         author: "Sarah M.",
         role: "Parent",
       },
       {
-        quote: "As an educator, I appreciate how mi-Era supports students without adding pressure. It's a tool that meets them where they are.",
+        quote: "As an educator, I appreciate how Mi-Era supports students without adding pressure. It's a tool that meets them where they are.",
         author: "Mr. Johnson",
         role: "High School Teacher",
       },
@@ -203,12 +204,12 @@ export default function Home() {
         role: "Student",
       },
       {
-        quote: "I was skeptical about another 'teen app' but mi-Era surprised me. The AI actually understands what I'm going through. It's like having a supportive friend who's always there.",
+        quote: "I was skeptical about another 'teen app' but Mi-Era surprised me. The AI actually understands what I'm going through. It's like having a supportive friend who's always there.",
         author: "Maya, 15",
         role: "Student",
       },
       {
-        quote: "Watching my students use mi-Era has been eye-opening. They're more engaged with their work and better at managing their time without the usual stress.",
+        quote: "Watching my students use Mi-Era has been eye-opening. They're more engaged with their work and better at managing their time without the usual stress.",
         author: "Dr. Chen",
         role: "School Counselor",
       },
@@ -268,14 +269,7 @@ export default function Home() {
   // Download CTA section content
   const downloadCTAData = {
     heading: "Ready to own your era?",
-    subheading: "Join the waitlist and be the first to know when mi-Era launches.",
-    ctaText: "Join the waitlist",
-    onCtaClick: () => {
-      const waitlistForm = document.getElementById('waitlist-form');
-      if (waitlistForm) {
-        waitlistForm.scrollIntoView({ behavior: 'smooth' });
-      }
-    },
+    subheading: "Join the waitlist and be the first to know when Mi-Era launches.",
   };
 
   // FAQ section content
@@ -336,21 +330,6 @@ export default function Home() {
 
         {/* Download CTA Section */}
         <DownloadCTA {...downloadCTAData} />
-
-        {/* Waitlist Form Section */}
-        <section id="waitlist-form" className="py-16 bg-brand-violet">
-          <div className="container mx-auto px-4">
-            <div className="max-w-2xl mx-auto text-center mb-8">
-              <h2 className="text-4xl md:text-5xl font-heading text-white mb-4">
-                Join the Waitlist
-              </h2>
-              <p className="text-lg font-body text-white/90">
-                Be the first to know when mi-Era launches. Get early access and exclusive updates.
-              </p>
-            </div>
-            <WaitlistForm />
-          </div>
-        </section>
 
         {/* FAQ Section */}
         <FAQ {...faqData} />

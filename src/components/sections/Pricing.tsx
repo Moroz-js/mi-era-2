@@ -18,8 +18,16 @@ interface PricingProps {
 
 export function Pricing({ heading, subheading, plans }: PricingProps) {
   return (
-    <section className="py-16 md:py-24 bg-brand-violet">
-      <div className="container mx-auto px-4">
+    <section className="py-16 md:py-24 bg-brand-violet relative overflow-hidden">
+      {/* Decorative stars */}
+      <span className="absolute top-[9%] left-[11%] text-5xl opacity-35">⭐</span>
+      <span className="absolute top-[20%] right-[6%] text-3xl opacity-35 hidden md:inline">⭐</span>
+      <span className="absolute bottom-[18%] left-[5%] text-2xl opacity-35">⭐</span>
+      <span className="absolute bottom-[7%] right-[9%] text-4xl opacity-35 hidden md:inline">⭐</span>
+      <span className="absolute top-[48%] left-[3%] text-3xl opacity-35 hidden md:inline">⭐</span>
+      <span className="absolute top-[65%] right-[12%] text-5xl opacity-35 hidden md:inline">⭐</span>
+      
+      <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12 md:mb-16">
           <h2 
             className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-brand-white"
@@ -102,7 +110,11 @@ export function Pricing({ heading, subheading, plans }: PricingProps) {
               <Button 
                 variant={plan.highlighted ? 'primary' : 'secondary'}
                 size="lg"
-                className={`w-full ${plan.highlighted ? '!bg-brand-white !text-brand-black hover:!bg-brand-violet hover:!text-brand-white' : ''}`}
+                className={`w-full ${
+                  plan.highlighted 
+                    ? '!bg-brand-white !text-brand-black hover:!bg-brand-violet hover:!text-brand-white' 
+                    : 'hover:!bg-brand-violet hover:!text-brand-white'
+                }`}
               >
                 {plan.ctaText}
               </Button>

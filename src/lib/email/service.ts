@@ -64,7 +64,7 @@ export async function sendConfirmation(email: string): Promise<void> {
     const mailOptions = {
       from: smtpFrom,
       to: email,
-      subject: 'Welcome to mi-Era Waitlist',
+      subject: 'Welcome to Mi-Era Waitlist',
       html: htmlContent,
     };
 

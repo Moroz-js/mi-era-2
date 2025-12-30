@@ -13,8 +13,15 @@ interface HowItWorksProps {
 
 export function HowItWorks({ heading, steps }: HowItWorksProps) {
   return (
-    <section className="bg-brand-violet py-16 md:py-24">
-      <div className="container mx-auto px-4">
+    <section className="bg-brand-violet py-16 md:py-24 relative overflow-hidden">
+      {/* Decorative stars */}
+      <span className="absolute top-[12%] left-[7%] text-3xl opacity-35">⭐</span>
+      <span className="absolute top-[25%] right-[9%] text-5xl opacity-35 hidden md:inline">⭐</span>
+      <span className="absolute bottom-[15%] left-[4%] text-4xl opacity-35">⭐</span>
+      <span className="absolute bottom-[8%] right-[11%] text-2xl opacity-35 hidden md:inline">⭐</span>
+      <span className="absolute top-[50%] right-[3%] text-3xl opacity-35 hidden md:inline">⭐</span>
+      
+      <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 
@@ -26,16 +33,16 @@ export function HowItWorks({ heading, steps }: HowItWorksProps) {
         </div>
 
         {/* Steps */}
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
             {steps.map((step) => (
               <div 
                 key={step.number}
-                className="flex gap-4 items-start"
+                className="flex flex-col gap-4 items-start h-full"
               >
                 {/* Step Number */}
                 <div 
-                  className="flex-shrink-0 w-12 h-12 rounded-full bg-brand-yellow flex items-center justify-center"
+                  className="flex-shrink-0 w-12 h-12 rounded-full bg-brand-yellow flex items-center justify-center mb-2"
                 >
                   <span 
                     className="text-2xl font-bold text-brand-black"

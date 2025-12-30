@@ -1,5 +1,6 @@
 import React from 'react';
 import { StarIcon } from '../icons/StarIcon';
+import { AbstractVisual } from '../ui/AbstractVisual';
 
 interface Feature {
   icon: React.ReactNode;
@@ -51,19 +52,22 @@ export function KeyFeatures({ heading, subheading, features }: KeyFeaturesProps)
               } gap-8 md:gap-12 items-center`}
             >
               {/* Text Content */}
-              <div className="flex-1 space-y-4">
-                {/* Icon */}
-                <div className="flex justify-center md:justify-start">
+              <div className="flex-1 space-y-4 relative">
+                {/* Icon - Absolute positioned on mobile */}
+                <div className="absolute left-0 top-0 md:hidden">
                   {feature.icon}
                 </div>
-
-                {/* Title */}
-                <h3 
-                  className="text-2xl md:text-3xl font-bold text-brand-black text-center md:text-left"
-                  style={{ fontFamily: 'var(--font-heading)' }}
-                >
-                  {feature.title}
-                </h3>
+                
+                {/* Title with Icon */}
+                <div className="flex items-center gap-2 justify-center md:justify-start">
+                  <span className="hidden md:inline">{feature.icon}</span>
+                  <h3 
+                    className="text-2xl md:text-3xl font-bold text-brand-black text-center md:text-left"
+                    style={{ fontFamily: 'var(--font-heading)' }}
+                  >
+                    {feature.title}
+                  </h3>
+                </div>
 
                 {/* Description */}
                 <p 
@@ -74,20 +78,13 @@ export function KeyFeatures({ heading, subheading, features }: KeyFeaturesProps)
                 </p>
               </div>
 
-              {/* Screenshot with Frame */}
-              <div className="flex-1 flex justify-center">
-                <div 
-                  className={`border-4 rounded-lg p-6 bg-gray-50 max-w-sm w-full`}
-                  style={{ borderColor: feature.screenshot.frameColor }}
-                >
-                  <div className="bg-brand-white rounded-lg p-8 flex items-center justify-center aspect-[9/16]">
-                    <p 
-                      className="text-brand-black text-center text-sm"
-                      style={{ fontFamily: 'var(--font-body)' }}
-                    >
-                      {feature.screenshot.alt}
-                    </p>
-                  </div>
+              {/* Abstract Visual */}
+              <div className="w-3/5 md:flex-1 flex justify-center">
+                <div className="rounded-lg overflow-hidden w-full max-w-sm md:max-w-md aspect-[9/16] shadow-lg">
+                  <AbstractVisual 
+                    variant={index === 0 ? 'adaptive' : index === 1 ? 'emotional' : 'growth'} 
+                    className="w-full h-full"
+                  />
                 </div>
               </div>
             </div>

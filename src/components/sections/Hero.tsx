@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Button } from '../ui/Button';
+import { AbstractVisual } from '../ui/AbstractVisual';
 
 interface HeroProps {
   heading: string;
@@ -23,52 +24,80 @@ export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
   };
 
   return (
-    <section className="bg-brand-violet text-brand-white py-16 md:py-24">
+    <section className="bg-brand-white text-brand-black py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Heading */}
-          <h1 
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
-            {heading}
-          </h1>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left Column - Text Content */}
+          <div>
+            {/* Tagline with star */}
+            <div className="flex items-center gap-2 mb-6">
+              <span className="text-2xl">⭐</span>
+              <p 
+                className="text-sm md:text-base font-medium text-brand-black"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                Made for teens, by people who get it
+              </p>
+            </div>
 
-          {/* Subheading */}
-          <p 
-            className="text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            {subheading}
-          </p>
-
-          {/* CTA Button */}
-          <div className="mb-12">
-            <Button 
-              variant="primary" 
-              size="lg"
-              onClick={handleCTAClick}
-              className="hover:!bg-brand-white hover:!text-brand-black"
+            {/* Heading */}
+            <h1 
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-brand-black"
+              style={{ fontFamily: 'var(--font-heading)' }}
             >
-              {ctaText}
-            </Button>
+              {heading}
+            </h1>
+
+            {/* Subheading */}
+            <p 
+              className="text-lg md:text-xl mb-8 text-brand-black"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              {subheading}
+            </p>
+
+            {/* CTA Button */}
+            <div className="mb-6">
+              <Button 
+                variant="primary" 
+                size="lg"
+                onClick={handleCTAClick}
+              >
+                {ctaText}
+              </Button>
+            </div>
+
+            {/* Own your era text */}
+            <p 
+              className="text-sm text-brand-black font-medium"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              Own your era
+            </p>
           </div>
 
-          {/* App Screenshots */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-            {screenshots.map((screenshot, index) => (
-              <div 
-                key={index}
-                className="bg-brand-white rounded-lg p-4 flex items-center justify-center"
-                style={{ aspectRatio: screenshot.aspectRatio }}
-              >
-                <div className="text-brand-black text-center">
-                  <p className="text-sm font-medium" style={{ fontFamily: 'var(--font-body)' }}>
-                    {screenshot.alt}
-                  </p>
-                </div>
-              </div>
-            ))}
+          {/* Right Column - App Screenshots with Abstract Visuals */}
+          <div className="relative h-[500px] md:h-[600px]">
+            {/* Journal Screenshot - Bottom Left */}
+            <div 
+              className="absolute bottom-0 left-0 w-[45%] h-[55%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
+            >
+              <AbstractVisual variant="emotional" className="w-full h-full" />
+            </div>
+
+            {/* App Screenshot - Top Center */}
+            <div 
+              className="absolute top-0 left-[25%] w-[50%] h-[65%] rounded-2xl shadow-lg border-4 border-white overflow-hidden z-10"
+            >
+              <AbstractVisual variant="adaptive" className="w-full h-full" />
+            </div>
+
+            {/* AI Chat Screenshot - Right */}
+            <div 
+              className="absolute top-[15%] right-0 w-[48%] h-[70%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
+            >
+              <AbstractVisual variant="balance" className="w-full h-full" />
+            </div>
           </div>
         </div>
       </div>

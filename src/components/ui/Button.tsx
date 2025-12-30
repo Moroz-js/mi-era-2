@@ -31,10 +31,10 @@ export function Button({
   const variantStyles = {
     primary: disabled
       ? 'bg-brand-light-gray text-brand-gray cursor-not-allowed'
-      : 'bg-brand-yellow text-brand-black hover:bg-brand-violet focus:ring-brand-violet',
+      : 'bg-brand-violet text-brand-white hover:bg-brand-yellow hover:text-brand-black focus:ring-brand-violet',
     secondary: disabled
       ? 'bg-brand-light-gray text-brand-gray cursor-not-allowed border-2 border-brand-light-gray'
-      : 'bg-transparent text-brand-black border-2 border-brand-black hover:bg-brand-red hover:text-brand-white hover:border-brand-red focus:ring-brand-red',
+      : 'bg-transparent text-brand-black border-2 border-brand-black hover:bg-brand-violet hover:text-brand-white hover:border-brand-violet focus:ring-brand-violet',
     'secondary-filled': disabled
       ? 'bg-brand-light-gray text-brand-gray cursor-not-allowed'
       : 'bg-brand-red text-brand-white hover:bg-brand-violet focus:ring-brand-violet',

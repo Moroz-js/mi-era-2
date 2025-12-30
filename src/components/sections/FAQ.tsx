@@ -53,15 +53,23 @@ export function FAQ({ heading, items }: FAQProps) {
                   </h3>
                   
                   {/* Expand/Collapse Icon */}
-                  <span 
-                    className="flex-shrink-0 text-brand-violet text-2xl font-bold transition-transform duration-200"
+                  <svg
+                    className="flex-shrink-0 w-4 h-4 text-brand-violet transition-transform duration-200"
                     style={{ 
                       transform: openIndex === index ? 'rotate(180deg)' : 'rotate(0deg)',
                     }}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
                     aria-hidden="true"
                   >
-                    ▼
-                  </span>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
                 </button>
 
                 {/* Answer */}

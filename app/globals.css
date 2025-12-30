@@ -35,3 +35,12 @@ body {
   color: var(--foreground);
   font-family: var(--font-body);
 }
+
+/* Remove outline and focus rings from all buttons */
+button:focus,
+button:focus-visible {
+  outline: none;
+  box-shadow: none;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-width: 0px;
+}
