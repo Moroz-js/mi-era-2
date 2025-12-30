@@ -24,7 +24,7 @@ export const emailTemplate = `
           <!-- Logo -->
           <tr>
             <td align="center" style="padding: 40px 20px 20px;">
-              <img src="{{logoUrl}}" alt="Mi-Era" style="height: 48px; width: auto;" />
+              <img src="https://mi-era-2.vercel.app/assets/logo.svg" alt="Mi-Era" style="height: 48px; width: auto;" />
             </td>
           </tr>
           
