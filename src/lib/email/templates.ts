@@ -31,7 +31,7 @@ export const emailTemplate = `
           <!-- Main Heading -->
           <tr>
             <td align="center" style="padding: 20px 40px;">
-              <h1 style="margin: 0; font-size: 32px; font-weight: 700; color: #3755F0; line-height: 1.2;">
+              <h1 style="margin: 0; font-size: 32px; font-weight: 700; color: #915AFF; line-height: 1.2;">
                 You're officially on the waitlist
               </h1>
             </td>
@@ -83,7 +83,7 @@ export const emailTemplate = `
           <!-- CTA Button -->
           <tr>
             <td align="center" style="padding: 0 40px 40px;">
-              <a href="{{siteUrl}}" style="display: inline-block; padding: 14px 32px; background-color: #3755F0; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600;">
+              <a href="{{siteUrl}}" style="display: inline-block; padding: 14px 32px; background-color: #915AFF; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600;">
                 Learn More
               </a>
             </td>
