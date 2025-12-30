@@ -20,10 +20,10 @@ export function Pricing({ heading, subheading, plans }: PricingProps) {
   return (
     <section className="py-16 md:py-24 bg-brand-violet relative overflow-hidden">
       {/* Decorative stars */}
-      <img src="/assets/star-2.png" alt="" className="absolute top-[9%] left-[11%] w-12 h-12 opacity-35" />
+      <img src="/assets/star-2.png" alt="" className="absolute top-[9%] left-[11%] opacity-35" style={{ width: '60px', height: '30px' }} />
       <img src="/assets/star-3.png" alt="" className="absolute top-[20%] right-[6%] w-8 h-8 opacity-35 hidden md:inline" />
       <img src="/assets/star-1.png" alt="" className="absolute bottom-[18%] left-[5%] w-6 h-6 opacity-35" />
-      <img src="/assets/star-2.png" alt="" className="absolute bottom-[7%] right-[9%] w-10 h-10 opacity-35 hidden md:inline" />
+      <img src="/assets/star-2.png" alt="" className="absolute bottom-[7%] right-[9%] opacity-35 hidden md:inline" style={{ width: '60px', height: '30px' }} />
       <img src="/assets/star-3.png" alt="" className="absolute top-[48%] left-[3%] w-8 h-8 opacity-35 hidden md:inline" />
       <img src="/assets/star-1.png" alt="" className="absolute top-[65%] right-[12%] w-12 h-12 opacity-35 hidden md:inline" />
       

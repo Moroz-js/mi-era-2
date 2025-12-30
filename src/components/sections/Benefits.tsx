@@ -16,11 +16,11 @@ export function Benefits({ heading, subheading, benefits }: BenefitsProps) {
   return (
     <section className="bg-brand-violet py-16 md:py-24 relative overflow-hidden">
       {/* Decorative stars */}
-      <img src="/assets/star-2.png" alt="" className="absolute top-[8%] left-[5%] w-10 h-10 opacity-35" />
+      <img src="/assets/star-2.png" alt="" className="absolute top-[8%] left-[5%] opacity-35" style={{ width: '60px', height: '30px' }} />
       <img src="/assets/star-1.png" alt="" className="absolute top-[15%] right-[12%] w-8 h-8 opacity-35 hidden md:inline" />
       <img src="/assets/star-3.png" alt="" className="absolute bottom-[20%] left-[8%] w-12 h-12 opacity-35" />
       <img src="/assets/star-1.png" alt="" className="absolute bottom-[10%] right-[6%] w-8 h-8 opacity-35 hidden md:inline" />
-      <img src="/assets/star-2.png" alt="" className="absolute top-[45%] left-[3%] w-6 h-6 opacity-35 hidden md:inline" />
+      <img src="/assets/star-2.png" alt="" className="absolute top-[45%] left-[3%] opacity-35 hidden md:inline" style={{ width: '60px', height: '30px' }} />
       <img src="/assets/star-3.png" alt="" className="absolute top-[60%] right-[4%] w-10 h-10 opacity-35 hidden md:inline" />
       
       <div className="container mx-auto px-4 relative z-10">

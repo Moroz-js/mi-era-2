@@ -17,7 +17,7 @@ export function HowItWorks({ heading, steps }: HowItWorksProps) {
       {/* Decorative stars */}
       <img src="/assets/star-1.png" alt="" className="absolute top-[12%] left-[7%] w-8 h-8 opacity-35" />
       <img src="/assets/star-3.png" alt="" className="absolute top-[25%] right-[9%] w-12 h-12 opacity-35 hidden md:inline" />
-      <img src="/assets/star-2.png" alt="" className="absolute bottom-[15%] left-[4%] w-10 h-10 opacity-35" />
+      <img src="/assets/star-2.png" alt="" className="absolute bottom-[15%] left-[4%] opacity-35" style={{ width: '60px', height: '30px' }} />
       <img src="/assets/star-1.png" alt="" className="absolute bottom-[8%] right-[11%] w-6 h-6 opacity-35 hidden md:inline" />
       <img src="/assets/star-3.png" alt="" className="absolute top-[50%] right-[3%] w-8 h-8 opacity-35 hidden md:inline" />
       
