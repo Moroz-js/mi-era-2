@@ -2,15 +2,32 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { Button } from './Button';
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const scrollToWaitlist = () => {
-    const waitlistForm = document.getElementById('waitlist-form');
-    if (waitlistForm) {
-      waitlistForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Check if we're on the home page
+    if (pathname === '/') {
+      // Already on home page, just scroll
+      const waitlistForm = document.getElementById('waitlist-form');
+      if (waitlistForm) {
+        waitlistForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      // Navigate to home page with hash
+      router.push('/#waitlist-form');
+      // Wait for navigation and then scroll
+      setTimeout(() => {
+        const waitlistForm = document.getElementById('waitlist-form');
+        if (waitlistForm) {
+          waitlistForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
     setIsMobileMenuOpen(false);
   };

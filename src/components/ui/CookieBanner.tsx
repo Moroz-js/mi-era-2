@@ -157,7 +157,7 @@ export function CookieBanner({ onAccept, onReject }: CookieBannerProps) {
               onClick={handleReject}
               className="w-full sm:w-auto"
             >
-              Reject Analytics
+              Decline
             </Button>
             <Button
               variant="primary"
