@@ -26,7 +26,7 @@ export function FAQ({ heading, items }: FAQProps) {
           {/* Section Header */}
           <h2 
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12 text-brand-black"
-            style={{ fontFamily: 'var(--font-heading)' }}
+            style={{ fontFamily: 'var(--font-body)' }}
           >
             {heading}
           </h2>
@@ -47,7 +47,7 @@ export function FAQ({ heading, items }: FAQProps) {
                 >
                   <h3 
                     className="text-lg md:text-xl font-bold text-brand-black"
-                    style={{ fontFamily: 'var(--font-heading)' }}
+                    style={{ fontFamily: 'var(--font-body)' }}
                   >
                     {item.question}
                   </h3>

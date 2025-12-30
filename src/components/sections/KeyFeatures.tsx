@@ -28,7 +28,7 @@ export function KeyFeatures({ heading, subheading, features }: KeyFeaturesProps)
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-brand-black mb-4"
-            style={{ fontFamily: 'var(--font-heading)' }}
+            style={{ fontFamily: 'var(--font-body)' }}
           >
             {heading}
           </h2>
@@ -52,18 +52,13 @@ export function KeyFeatures({ heading, subheading, features }: KeyFeaturesProps)
               } gap-8 md:gap-12 items-center`}
             >
               {/* Text Content */}
-              <div className="flex-1 space-y-4 relative">
-                {/* Icon - Absolute positioned on mobile */}
-                <div className="absolute left-0 top-0 md:hidden">
+              <div className="flex-1 space-y-4">
+                {/* Icon and Title - vertical on mobile, horizontal on desktop */}
+                <div className="flex flex-col md:flex-row items-center md:items-center gap-2 md:gap-2">
                   {feature.icon}
-                </div>
-                
-                {/* Title with Icon */}
-                <div className="flex items-center gap-2 justify-center md:justify-start">
-                  <span className="hidden md:inline">{feature.icon}</span>
                   <h3 
                     className="text-2xl md:text-3xl font-bold text-brand-black text-center md:text-left"
-                    style={{ fontFamily: 'var(--font-heading)' }}
+                    style={{ fontFamily: 'var(--font-body)' }}
                   >
                     {feature.title}
                   </h3>

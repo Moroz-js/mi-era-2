@@ -16,17 +16,17 @@ export function Testimonials({ heading, testimonials }: TestimonialsProps) {
   return (
     <section className="py-16 md:py-24 bg-brand-white relative overflow-hidden">
       {/* Decorative stars */}
-      <span className="absolute top-[10%] left-[6%] text-4xl opacity-35">⭐</span>
-      <span className="absolute top-[18%] right-[8%] text-2xl opacity-35 hidden md:inline">⭐</span>
-      <span className="absolute bottom-[25%] left-[10%] text-3xl opacity-35">⭐</span>
-      <span className="absolute bottom-[12%] right-[5%] text-5xl opacity-35 hidden md:inline">⭐</span>
-      <span className="absolute top-[55%] left-[4%] text-3xl opacity-35 hidden md:inline">⭐</span>
-      <span className="absolute top-[70%] right-[7%] text-4xl opacity-35 hidden md:inline">⭐</span>
+      <img src="/assets/star-3.png" alt="" className="absolute top-[5%] md:top-[10%] left-[6%] w-10 h-10 opacity-35" />
+      <img src="/assets/star-1.png" alt="" className="absolute top-[18%] right-[8%] w-6 h-6 opacity-35 hidden md:inline" />
+      <img src="/assets/star-2.png" alt="" className="absolute bottom-[25%] left-[10%] w-8 h-8 opacity-35" />
+      <img src="/assets/star-3.png" alt="" className="absolute bottom-[12%] right-[5%] w-12 h-12 opacity-35 hidden md:inline" />
+      <img src="/assets/star-1.png" alt="" className="absolute top-[55%] left-[4%] w-8 h-8 opacity-35 hidden md:inline" />
+      <img src="/assets/star-2.png" alt="" className="absolute top-[70%] right-[7%] w-10 h-10 opacity-35 hidden md:inline" />
       
       <div className="container mx-auto px-4 relative z-10">
         <h2 
           className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12 md:mb-16 text-brand-black"
-          style={{ fontFamily: 'var(--font-heading)' }}
+          style={{ fontFamily: 'var(--font-body)' }}
         >
           {heading}
         </h2>
@@ -56,7 +56,7 @@ export function Testimonials({ heading, testimonials }: TestimonialsProps) {
                 <div>
                   <p 
                     className="font-bold text-brand-black text-lg"
-                    style={{ fontFamily: 'var(--font-heading)' }}
+                    style={{ fontFamily: 'var(--font-body)' }}
                   >
                     {testimonial.author}
                   </p>

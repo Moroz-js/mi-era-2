@@ -15,18 +15,18 @@ export function HowItWorks({ heading, steps }: HowItWorksProps) {
   return (
     <section className="bg-brand-violet py-16 md:py-24 relative overflow-hidden">
       {/* Decorative stars */}
-      <span className="absolute top-[12%] left-[7%] text-3xl opacity-35">⭐</span>
-      <span className="absolute top-[25%] right-[9%] text-5xl opacity-35 hidden md:inline">⭐</span>
-      <span className="absolute bottom-[15%] left-[4%] text-4xl opacity-35">⭐</span>
-      <span className="absolute bottom-[8%] right-[11%] text-2xl opacity-35 hidden md:inline">⭐</span>
-      <span className="absolute top-[50%] right-[3%] text-3xl opacity-35 hidden md:inline">⭐</span>
+      <img src="/assets/star-1.png" alt="" className="absolute top-[12%] left-[7%] w-8 h-8 opacity-35" />
+      <img src="/assets/star-3.png" alt="" className="absolute top-[25%] right-[9%] w-12 h-12 opacity-35 hidden md:inline" />
+      <img src="/assets/star-2.png" alt="" className="absolute bottom-[15%] left-[4%] w-10 h-10 opacity-35" />
+      <img src="/assets/star-1.png" alt="" className="absolute bottom-[8%] right-[11%] w-6 h-6 opacity-35 hidden md:inline" />
+      <img src="/assets/star-3.png" alt="" className="absolute top-[50%] right-[3%] w-8 h-8 opacity-35 hidden md:inline" />
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-brand-white mb-4"
-            style={{ fontFamily: 'var(--font-heading)' }}
+            style={{ fontFamily: 'var(--font-body)' }}
           >
             {heading}
           </h2>
@@ -46,7 +46,7 @@ export function HowItWorks({ heading, steps }: HowItWorksProps) {
                 >
                   <span 
                     className="text-2xl font-bold text-brand-black"
-                    style={{ fontFamily: 'var(--font-heading)' }}
+                    style={{ fontFamily: 'var(--font-body)' }}
                   >
                     {step.number}
                   </span>
@@ -56,7 +56,7 @@ export function HowItWorks({ heading, steps }: HowItWorksProps) {
                 <div className="flex-1">
                   <h3 
                     className="text-xl md:text-2xl font-bold text-brand-white mb-2"
-                    style={{ fontFamily: 'var(--font-heading)' }}
+                    style={{ fontFamily: 'var(--font-body)' }}
                   >
                     {step.title}
                   </h3>

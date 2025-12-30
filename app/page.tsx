@@ -117,7 +117,7 @@ export default function Home() {
     subheading: "Simple tools that work together to help you stay on track and feel good about your progress.",
     features: [
       {
-        icon: <span className="text-2xl">⭐</span>,
+        icon: <img src="/assets/star-1.png" alt="star" className="w-6 h-6" />,
         title: "App is adaptive to your behavior",
         description: "The more you use Mi-Era, the better it understands your patterns. It learns when you work best, what motivates you, and how to support you without being pushy.",
         screenshot: {
@@ -128,7 +128,7 @@ export default function Home() {
         layout: "right" as const,
       },
       {
-        icon: <span className="text-2xl">⭐</span>,
+        icon: <img src="/assets/star-1.png" alt="star" className="w-6 h-6" />,
         title: "Emotional Journal",
         description: "Track how you're feeling alongside your tasks. See patterns, understand what affects your mood, and learn what helps you feel better.",
         screenshot: {
@@ -139,7 +139,7 @@ export default function Home() {
         layout: "left" as const,
       },
       {
-        icon: <span className="text-2xl">⭐</span>,
+        icon: <img src="/assets/star-1.png" alt="star" className="w-6 h-6" />,
         title: "Progress and Rewards",
         description: "Celebrate every step forward. See your streaks, track your wins, and feel good about what you've accomplished—no matter how small.",
         screenshot: {

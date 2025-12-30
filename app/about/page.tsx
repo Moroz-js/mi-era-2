@@ -14,7 +14,7 @@ export default function AboutPage() {
               <section className="mb-12">
                 <h2 
                   className="text-3xl md:text-4xl font-bold mb-6 text-brand-black"
-                  style={{ fontFamily: 'var(--font-heading)' }}
+                  style={{ fontFamily: 'var(--font-body)' }}
                 >
                   Our Story
                 </h2>
@@ -43,7 +43,7 @@ export default function AboutPage() {
               <section className="mb-12">
                 <h2 
                   className="text-3xl md:text-4xl font-bold mb-6 text-brand-black"
-                  style={{ fontFamily: 'var(--font-heading)' }}
+                  style={{ fontFamily: 'var(--font-body)' }}
                 >
                   Our Mission
                 </h2>
@@ -72,7 +72,7 @@ export default function AboutPage() {
               <section className="mb-12">
                 <h2 
                   className="text-3xl md:text-4xl font-bold mb-6 text-brand-black"
-                  style={{ fontFamily: 'var(--font-heading)' }}
+                  style={{ fontFamily: 'var(--font-body)' }}
                 >
                   What We Stand For
                 </h2>
@@ -81,7 +81,7 @@ export default function AboutPage() {
                   <div>
                     <h3 
                       className="text-xl font-bold mb-2 text-brand-black"
-                      style={{ fontFamily: 'var(--font-heading)' }}
+                      style={{ fontFamily: 'var(--font-body)' }}
                     >
                       Privacy First
                     </h3>
@@ -96,7 +96,7 @@ export default function AboutPage() {
                   <div>
                     <h3 
                       className="text-xl font-bold mb-2 text-brand-black"
-                      style={{ fontFamily: 'var(--font-heading)' }}
+                      style={{ fontFamily: 'var(--font-body)' }}
                     >
                       No Guilt, No Pressure
                     </h3>
@@ -111,7 +111,7 @@ export default function AboutPage() {
                   <div>
                     <h3 
                       className="text-xl font-bold mb-2 text-brand-black"
-                      style={{ fontFamily: 'var(--font-heading)' }}
+                      style={{ fontFamily: 'var(--font-body)' }}
                     >
                       Built for Real Teens
                     </h3>
@@ -126,7 +126,7 @@ export default function AboutPage() {
                   <div>
                     <h3 
                       className="text-xl font-bold mb-2 text-brand-black"
-                      style={{ fontFamily: 'var(--font-heading)' }}
+                      style={{ fontFamily: 'var(--font-body)' }}
                     >
                       Transparency Always
                     </h3>
@@ -151,7 +151,7 @@ export default function AboutPage() {
               <section className="mb-12">
                 <h2 
                   className="text-3xl md:text-4xl font-bold mb-6 text-brand-black"
-                  style={{ fontFamily: 'var(--font-heading)' }}
+                  style={{ fontFamily: 'var(--font-body)' }}
                 >
                   Looking Forward
                 </h2>

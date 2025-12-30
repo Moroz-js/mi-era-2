@@ -280,7 +280,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
                 <div className="sticky top-24">
                   <h3 
                     className="text-lg font-bold text-brand-black mb-4"
-                    style={{ fontFamily: 'var(--font-heading)' }}
+                    style={{ fontFamily: 'var(--font-body)' }}
                   >
                     Table of Contents
                   </h3>
@@ -320,7 +320,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
                     <div key={section.id} id={section.id} className="mb-12 scroll-mt-24">
                       <h2 
                         className="text-2xl md:text-3xl font-bold text-brand-black mb-4"
-                        style={{ fontFamily: 'var(--font-heading)' }}
+                        style={{ fontFamily: 'var(--font-body)' }}
                       >
                         {section.title}
                       </h2>
@@ -335,7 +335,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
                             <li key={subsection.id} id={subsection.id}>
                               <h3 
                                 className="text-xl font-bold text-brand-black mb-2"
-                                style={{ fontFamily: 'var(--font-heading)' }}
+                                style={{ fontFamily: 'var(--font-body)' }}
                               >
                                 {subsection.title}
                               </h3>

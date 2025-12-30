@@ -1,13 +1,30 @@
 import type { Metadata } from "next";
-import { Lexend } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { CookieBanner } from "@/components/ui";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 
-const lexend = Lexend({
+const specialGothic = localFont({
+  src: "../public/fonts/SpecialGothic-Regular.ttf",
+  variable: "--font-heading",
+  weight: "400",
+  display: "swap",
+});
+
+const lexend = localFont({
+  src: [
+    {
+      path: "../public/fonts/Lexend-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Lexend-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
   variable: "--font-body",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -23,13 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap"
-          rel="preconnect"
-        />
-      </head>
-      <body className={`${lexend.variable} antialiased`}>
+      <body className={`${specialGothic.variable} ${lexend.variable} antialiased`}>
         <AnalyticsProvider />
         {children}
         <CookieBanner />

@@ -22,9 +22,11 @@ export function Header() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center">
-              <div className="text-brand-violet text-xl font-bold cursor-pointer hover:text-brand-yellow transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>
-                Mi-Era
-              </div>
+              <img 
+                src="/assets/logo.svg" 
+                alt="Mi-Era" 
+                className="h-8 w-auto cursor-pointer transition-opacity hover:opacity-80"
+              />
             </Link>
 
             {/* Desktop Navigation - Centered */}

@@ -1,23 +1,29 @@
 /**
- * Google Fonts configuration for mi-Era brand
+ * Local fonts configuration for Mi-Era brand
  * 
  * Fonts:
- * - Special Gothic Expanded: Headings (loaded via link in layout)
- * - Lexend: Body text (loaded via Next.js font optimization)
+ * - Special Gothic: H1 headings only (weight 400)
+ * - Lexend Bold: Section headings h2, h3 (weight 700)
+ * - Lexend Regular: Body text (weight 400)
+ * 
+ * Fonts are loaded from /public/fonts/ via Next.js localFont in layout.tsx
  */
 
 export const BRAND_FONTS = {
   heading: {
-    name: 'Special Gothic Expanded',
+    name: 'Special Gothic',
     fallback: 'sans-serif',
     cssVariable: '--font-heading',
-    googleFontsUrl: 'https://fonts.googleapis.com/css2?family=Special+Elite&display=swap',
+    weight: '400',
   },
   body: {
     name: 'Lexend',
     fallback: 'sans-serif',
     cssVariable: '--font-body',
-    weights: ['300', '400', '500', '600', '700'],
+    weights: {
+      regular: '400',
+      bold: '700',
+    },
   },
 } as const;
 
@@ -26,7 +32,7 @@ export const BRAND_FONTS = {
  */
 export function getFontFamily(type: 'heading' | 'body'): string {
   const font = BRAND_FONTS[type];
-  return `'${font.name}', ${font.fallback}`;
+  return `var(${font.cssVariable}), ${font.fallback}`;
 }
 
 /**

@@ -55,14 +55,20 @@ function replaceTemplateVariables(template: string, variables: Record<string, st
  * @throws Error if email sending fails
  */
 export async function sendConfirmation(email: string): Promise<void> {
+  // Mock mode for development - just log instead of sending
+  if (process.env.NODE_ENV === 'development' && process.env.SMTP_MOCK === 'true') {
+    console.log('📧 [MOCK] Confirmation email would be sent to:', email);
+    console.log('Subject: Welcome to Mi-Era Waitlist');
+    return;
+  }
+
   try {
     const transporter = createTransporter();
     const variables = getEmailVariables(email);
     const htmlContent = replaceTemplateVariables(emailTemplate, variables);
-    const smtpFrom = process.env.SMTP_FROM || 'no-reply@mi-era.org';
 
     const mailOptions = {
-      from: smtpFrom,
+      from: process.env.SMTP_FROM || 'no-reply@mi-era.org',
       to: email,
       subject: 'Welcome to Mi-Era Waitlist',
       html: htmlContent,

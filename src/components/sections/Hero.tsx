@@ -31,7 +31,7 @@ export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
           <div>
             {/* Tagline with star */}
             <div className="flex items-center gap-2 mb-6">
-              <span className="text-2xl">⭐</span>
+              <img src="/assets/star-1.png" alt="star" className="w-6 h-6" />
               <p 
                 className="text-sm md:text-base font-medium text-brand-black"
                 style={{ fontFamily: 'var(--font-body)' }}

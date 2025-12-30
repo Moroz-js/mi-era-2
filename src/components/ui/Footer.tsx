@@ -10,12 +10,11 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Logo and Description */}
           <div>
-            <div 
-              className="text-brand-violet text-2xl font-bold mb-4"
-              style={{ fontFamily: 'var(--font-heading)' }}
-            >
-              Mi-Era
-            </div>
+            <img 
+              src="/assets/logo.svg" 
+              alt="Mi-Era" 
+              className="h-10 w-auto mb-4"
+            />
             <p 
               className="text-gray-600 text-sm leading-relaxed"
               style={{ fontFamily: 'var(--font-body)' }}
@@ -28,7 +27,7 @@ export function Footer() {
           <div>
             <h4 
               className="text-lg font-bold mb-4" 
-              style={{ fontFamily: 'var(--font-heading)' }}
+              style={{ fontFamily: 'var(--font-body)' }}
             >
               Quick Links
             </h4>
@@ -81,7 +80,7 @@ export function Footer() {
           <div>
             <h4 
               className="text-lg font-bold mb-4" 
-              style={{ fontFamily: 'var(--font-heading)' }}
+              style={{ fontFamily: 'var(--font-body)' }}
             >
               Legal
             </h4>

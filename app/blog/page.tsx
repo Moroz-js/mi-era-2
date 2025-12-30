@@ -64,7 +64,7 @@ export default function BlogPage() {
             <div className="max-w-4xl mx-auto text-center">
               <h1 
                 className="text-4xl md:text-5xl lg:text-6xl font-bold text-brand-white mb-6"
-                style={{ fontFamily: 'var(--font-heading)' }}
+                style={{ fontFamily: 'var(--font-body)' }}
               >
                 Blog
               </h1>
@@ -104,7 +104,7 @@ export default function BlogPage() {
                     <div className="absolute inset-0 flex items-center justify-center">
                       <h3 
                         className="text-white text-xl font-bold px-6 text-center"
-                        style={{ fontFamily: 'var(--font-heading)' }}
+                        style={{ fontFamily: 'var(--font-body)' }}
                       >
                         {post.title}
                       </h3>
@@ -130,7 +130,7 @@ export default function BlogPage() {
 
                     <h2 
                       className="text-xl font-bold text-brand-black mb-3"
-                      style={{ fontFamily: 'var(--font-heading)' }}
+                      style={{ fontFamily: 'var(--font-body)' }}
                     >
                       {post.title}
                     </h2>

@@ -22,7 +22,7 @@ export function Statistics({ stats }: StatisticsProps) {
                 {/* Large statistic value */}
                 <div 
                   className="text-5xl md:text-6xl font-bold text-brand-violet mb-3"
-                  style={{ fontFamily: 'var(--font-heading)' }}
+                  style={{ fontFamily: 'var(--font-body)' }}
                 >
                   {stat.value}
                 </div>
