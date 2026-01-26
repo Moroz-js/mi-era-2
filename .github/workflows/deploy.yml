@@ -8,21 +8,55 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Deploy to server via SSH
+      - name: Deploy to server via SSH (Docker Compose)
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
+          script_stop: true
           script: |
+            set -e
+
             cd /var/www/mi-era
-            git pull origin main
+
+            # обновляем код
+            git fetch --all
+            git reset --hard origin/main
+
+            # поднимаем базу (если не поднята)
             docker compose up -d postgres
-            npm install
-            npm run db:push
-            npm run build
-            pm2 restart mi-era || pm2 start npm --name "mi-era" -- start
-            pm2 save
+
+            # ждём готовности Postgres
+            for i in {1..30}; do
+              if docker compose exec -T postgres pg_isready -U postgres >/dev/null 2>&1; then
+                echo "Postgres is ready"
+                break
+              fi
+              echo "Waiting for Postgres..."
+              sleep 2
+            done
+
+            # собираем и поднимаем app
+            docker compose up -d --build app
+
+            # миграции (внутри контейнера app)
+            if docker compose exec -T app npm run | grep -q "db:push"; then
+              docker compose exec -T app npm run db:push
+            else
+              docker compose exec -T app npx drizzle-kit push
+            fi
+
+            # seed (если есть)
+            if docker compose exec -T app npm run | grep -q "db:seed"; then
+              docker compose exec -T app npm run db:seed
+            else
+              echo "db:seed script not found, skipping"
+            fi
+
+            # показать статус
+            docker compose ps
+            docker compose logs --tail=50 app
