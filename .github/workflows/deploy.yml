@@ -27,13 +27,28 @@ jobs:
             git fetch --all
             git reset --hard origin/main
 
-            # билд app БЕЗ КЕША
-            docker compose build --no-cache app
+            # 1) гарантируем, что postgres поднят (БД/volume остаются)
+            docker compose up -d postgres
 
-            # поднять контейнеры
-            docker compose up -d
+            # 2) жестко "обнуляем" только фронт/app:
+            #    - останавливаем app (postgres не трогаем)
+            docker compose stop app || true
+            docker compose rm -f app || true
 
-            # ждать postgres
+            #    - удаляем локальный image приложения (чтобы точно не было reuse)
+            docker image rm -f mi-era-app:latest 2>/dev/null || true
+
+            #    - чистим build cache (безопасно для БД)
+            docker builder prune -af || true
+            docker buildx prune -af || true
+
+            #    - билдим app с нуля (и тянем свежий base image)
+            DOCKER_BUILDKIT=1 docker compose build --no-cache --pull --progress=plain app
+
+            # 3) поднимаем/пересоздаём app
+            docker compose up -d --force-recreate app
+
+            # 4) ждём базу (на всякий)
             for i in {1..30}; do
               if docker compose exec -T postgres pg_isready -U postgres >/dev/null 2>&1; then
                 echo "Postgres is ready"
@@ -43,18 +58,20 @@ jobs:
               sleep 2
             done
 
-            # миграции
+            # 5) миграции и seed (внутри app)
             if docker compose exec -T app npm run | grep -q "db:push"; then
               docker compose exec -T app npm run db:push
             else
               docker compose exec -T app npx drizzle-kit push
             fi
 
-            # seed (если есть)
             if docker compose exec -T app npm run | grep -q "db:seed"; then
               docker compose exec -T app npm run db:seed
+            else
+              echo "db:seed script not found, skipping"
             fi
 
             docker compose ps
             docker compose logs --tail=50 app
+
 
