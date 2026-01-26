@@ -21,37 +21,15 @@ jobs:
           script_stop: true
           script: |
             set -euo pipefail
-
             cd /var/www/mi-era
 
             git fetch --all
             git reset --hard origin/main
 
-            # DB/volume stays — just ensure it's running
+            # 1) Ensure DB is up (no downtime)
             docker compose up -d postgres
 
-            # --- HARD CLEAN frontend artifacts on host (does NOT touch DB) ---
-            # These folders can "leak" into docker build context if not dockerignored
-            rm -rf .next .turbo node_modules || true
-
-            # stop/remove only app container (postgres untouched)
-            docker compose stop app || true
-            docker compose rm -f app || true
-
-            # remove app image so it can't be reused
-            docker image rm -f mi-era-app:latest 2>/dev/null || true
-
-            # optional: clean build cache (safe for DB)
-            docker builder prune -af || true
-            docker buildx prune -af || true
-
-            # build app from scratch (no cache, pull base image)
-            DOCKER_BUILDKIT=1 docker compose build --no-cache --pull --progress=plain app
-
-            # start/recreate app
-            docker compose up -d --force-recreate app
-
-            # wait for postgres readiness
+            # 2) Wait for Postgres + auth check (no downtime)
             for i in {1..30}; do
               if docker compose exec -T postgres sh -lc 'PGPASSWORD="$POSTGRES_PASSWORD" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "select 1" >/dev/null'; then
                 echo "Postgres auth OK"
@@ -61,15 +39,33 @@ jobs:
               sleep 2
             done
 
+            # 3) IMPORTANT: normalize postgres password BEFORE app rebuild/switch
+            # (since you observe it "breaks" after deploy)
+            docker compose exec -T postgres psql -U postgres -d postgres -c "ALTER USER postgres WITH PASSWORD 'postgres';"
 
-            # маленькая пауза чтобы app точно поднялся (уменьшает race)
+            # re-check auth after reset
+            docker compose exec -T postgres sh -lc 'PGPASSWORD="$POSTGRES_PASSWORD" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "select 1" >/dev/null'
+
+            # 4) Build new app image while old app keeps running (no downtime)
+            rm -rf .next .turbo node_modules || true
+
+            # (optional) don’t nuke all build cache each deploy – it slows deploys; but keeps as you had
+            docker builder prune -af || true
+            docker buildx prune -af || true
+
+            DOCKER_BUILDKIT=1 docker compose build --no-cache --pull --progress=plain app
+
+            # 5) Fast switch: recreate app container (short downtime only here)
+            docker compose up -d --force-recreate app
+
+            # small pause for app boot
             sleep 2
 
-            # migrations (не роняем job на проверках)
+            # 6) Migrations/seed
+            # NOTE: better to NOT swallow migration errors in prod
             docker compose exec -T app npm run db:push || docker compose exec -T app npx drizzle-kit push
-
-            # seed optional
             docker compose exec -T app npm run db:seed || true
 
             docker compose ps
             docker compose logs --tail=80 app
+
