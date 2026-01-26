@@ -368,28 +368,7 @@ export default function Home() {
       <Header />
       <main className="flex-grow">
         {/* Hero Section */}
-        <Hero {...heroData} />
-
-        {/* Statistics Section */}
-        <Statistics {...statisticsData} />
-
-        {/* Benefits Section */}
-        <Benefits {...benefitsData} />
-
-        {/* Key Features Section */}
-        <KeyFeatures {...keyFeaturesData} />
-
-        {/* How It Works Section */}
-        <HowItWorks {...howItWorksData} />
-
-        {/* Testimonials Section */}
-        <Testimonials {...testimonialsData} />
-
-        {/* Pricing Section */}
-        <Pricing {...pricingData} />
-
-        {/* Download CTA Section */}
-        <DownloadCTA {...downloadCTAData} />
+        
 
         {/* FAQ Section */}
         <FAQ {...faqData} />
