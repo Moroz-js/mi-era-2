@@ -8,7 +8,7 @@ import Script from "next/script";
 export default function Home() {
   // Hero section content
   const heroData = {
-    heading: "A reliable space where teens can grow2",
+    heading: "A reliable space where teens can grow",
     subheading: "Track your tasks, understand your emotions, and build habits that actually work for you. No pressure, no judgment—just support.",
     ctaText: "Get early access",
     screenshots: [
