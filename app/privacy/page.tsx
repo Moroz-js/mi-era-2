@@ -6,8 +6,8 @@ import { notFound } from "next/navigation";
 
 export const metadata: Metadata = generatePageMetadata('privacy');
 
-// Revalidate every hour to pick up content changes
-export const revalidate = 3600;
+// Force dynamic rendering to avoid DB access during build
+export const dynamic = "force-dynamic";
 
 export default async function PrivacyPolicy() {
   // Fetch page content from database

@@ -8,6 +8,9 @@ import { generateBlogMetadata } from "@/lib/seo/metadata";
 import { generateBlogPosting } from "@/lib/seo/structured-data";
 import type { Metadata } from "next";
 
+// Force dynamic rendering to avoid DB access during build
+export const dynamic = "force-dynamic";
+
 interface BlogPost {
   id: number;
   title: string;

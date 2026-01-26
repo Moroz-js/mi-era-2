@@ -7,6 +7,9 @@ import { db } from "@/lib/db/client";
 import { blogPosts } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
 
+// Force dynamic rendering to avoid DB access during build
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = generatePageMetadata('blog');
 
 interface BlogPost {

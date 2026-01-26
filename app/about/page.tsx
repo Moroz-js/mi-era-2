@@ -6,8 +6,8 @@ import { notFound } from "next/navigation";
 
 export const metadata: Metadata = generatePageMetadata('about');
 
-// Revalidate every hour to pick up content changes
-export const revalidate = 3600;
+// Force dynamic rendering to avoid DB access during build
+export const dynamic = "force-dynamic";
 
 export default async function AboutPage() {
   // Fetch page content from database
