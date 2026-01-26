@@ -53,19 +53,20 @@ jobs:
 
             # wait for postgres readiness
             for i in {1..30}; do
-              if docker compose exec -T postgres pg_isready -U postgres >/dev/null 2>&1; then
-                echo "Postgres is ready"
+              if docker compose exec -T postgres sh -lc 'PGPASSWORD="$POSTGRES_PASSWORD" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "select 1" >/dev/null'; then
+                echo "Postgres auth OK"
                 break
               fi
-              echo "Waiting for Postgres..."
+              echo "Waiting for Postgres auth..."
               sleep 2
             done
+
 
             # маленькая пауза чтобы app точно поднялся (уменьшает race)
             sleep 2
 
             # migrations (не роняем job на проверках)
-            docker compose exec -T app npm run db:push || docker compose exec -T app npx drizzle-kit push || true
+            docker compose exec -T app npm run db:push || docker compose exec -T app npx drizzle-kit push
 
             # seed optional
             docker compose exec -T app npm run db:seed || true
