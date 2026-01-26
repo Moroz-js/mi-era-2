@@ -25,13 +25,6 @@ export default async function AboutPage() {
         <article className="py-16 md:py-24">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <h1 
-                className="text-4xl md:text-5xl font-bold mb-8 text-brand-black"
-                style={{ fontFamily: 'var(--font-body)' }}
-              >
-                {page.title}
-              </h1>
-              
               {/* Render HTML content from database */}
               <div 
                 className="prose prose-lg max-w-none"

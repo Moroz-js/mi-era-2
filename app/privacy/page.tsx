@@ -25,10 +25,6 @@ export default async function PrivacyPolicy() {
         <section className="py-16 bg-brand-white">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <h1 className="text-4xl md:text-5xl font-heading text-brand-black mb-8">
-                {page.title}
-              </h1>
-              
               {/* Render HTML content from database */}
               <div 
                 className="prose prose-lg max-w-none font-body text-brand-black"
