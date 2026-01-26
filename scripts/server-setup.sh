@@ -20,10 +20,25 @@ fi
 # Цвета для вывода
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+echo -e "${YELLOW}⚠️  ВНИМАНИЕ: Скрипт будет работать от пользователя root${NC}"
+echo -e "${YELLOW}Для production рекомендуется использовать отдельного пользователя${NC}"
+echo ""
+read -p "Продолжить? (y/n): " CONTINUE
+if [ "$CONTINUE" != "y" ]; then
+    echo "Установка отменена"
+    exit 0
+fi
+echo ""
+
 echo -e "${YELLOW}📦 Обновление системы...${NC}"
-apt update && apt upgrade -y
+apt update
+apt upgrade -y --fix-missing || {
+    echo -e "${YELLOW}⚠ Некоторые пакеты не удалось обновить, продолжаем...${NC}"
+    apt upgrade -y --exclude=linux-firmware || true
+}
 
 echo -e "${GREEN}✓ Система обновлена${NC}"
 echo ""
@@ -64,14 +79,31 @@ PM2_VERSION=$(pm2 --version)
 echo -e "${GREEN}✓ PM2 ${PM2_VERSION} установлен${NC}"
 echo ""
 
-# Установка PostgreSQL
-echo -e "${YELLOW}📦 Установка PostgreSQL...${NC}"
-apt-get install -y postgresql postgresql-contrib
-systemctl start postgresql
-systemctl enable postgresql
+# Установка Docker и Docker Compose
+echo -e "${YELLOW}📦 Установка Docker...${NC}"
+apt-get install -y ca-certificates curl gnupg lsb-release
 
-PG_VERSION=$(psql --version | awk '{print $3}')
-echo -e "${GREEN}✓ PostgreSQL ${PG_VERSION} установлен${NC}"
+# Добавление официального GPG ключа Docker
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+# Добавление репозитория Docker
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Установка Docker Engine
+apt-get update
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Запуск Docker
+systemctl start docker
+systemctl enable docker
+
+DOCKER_VERSION=$(docker --version | awk '{print $3}' | sed 's/,//')
+COMPOSE_VERSION=$(docker compose version | awk '{print $4}')
+echo -e "${GREEN}✓ Docker ${DOCKER_VERSION} установлен${NC}"
+echo -e "${GREEN}✓ Docker Compose ${COMPOSE_VERSION} установлен${NC}"
 echo ""
 
 # Установка Nginx
@@ -91,67 +123,24 @@ apt-get install -y certbot python3-certbot-nginx
 echo -e "${GREEN}✓ Certbot установлен${NC}"
 echo ""
 
-# Создание пользователя deploy
-echo -e "${YELLOW}👤 Создание пользователя deploy...${NC}"
-if id "deploy" &>/dev/null; then
-    echo -e "${YELLOW}⚠ Пользователь deploy уже существует${NC}"
-else
-    adduser --disabled-password --gecos "" deploy
-    usermod -aG sudo deploy
-    echo -e "${GREEN}✓ Пользователь deploy создан${NC}"
-fi
-echo ""
-
-# Настройка SSH для deploy
-echo -e "${YELLOW}🔑 Настройка SSH для пользователя deploy...${NC}"
-mkdir -p /home/deploy/.ssh
-if [ -f /root/.ssh/authorized_keys ]; then
-    cp /root/.ssh/authorized_keys /home/deploy/.ssh/
-    chown -R deploy:deploy /home/deploy/.ssh
-    chmod 700 /home/deploy/.ssh
-    chmod 600 /home/deploy/.ssh/authorized_keys
-    echo -e "${GREEN}✓ SSH ключи скопированы${NC}"
-else
-    echo -e "${YELLOW}⚠ Файл /root/.ssh/authorized_keys не найден${NC}"
-    echo "Добавьте SSH ключи вручную в /home/deploy/.ssh/authorized_keys"
-fi
-echo ""
-
 # Создание директории для проекта
 echo -e "${YELLOW}📁 Создание директории проекта...${NC}"
 mkdir -p /var/www
-chown -R deploy:deploy /var/www
 echo -e "${GREEN}✓ Директория /var/www создана${NC}"
 echo ""
 
-# Настройка PostgreSQL
-echo -e "${YELLOW}🗄️  Настройка PostgreSQL...${NC}"
-echo ""
-echo "Введите данные для базы данных:"
-read -p "Имя базы данных [mi_era]: " DB_NAME
-DB_NAME=${DB_NAME:-mi_era}
-
-read -p "Имя пользователя БД [mi_era_user]: " DB_USER
-DB_USER=${DB_USER:-mi_era_user}
-
-read -sp "Пароль для БД: " DB_PASSWORD
+# Настройка PostgreSQL через Docker
+echo -e "${YELLOW}🗄️  Настройка PostgreSQL (Docker)...${NC}"
 echo ""
 
-if [ -z "$DB_PASSWORD" ]; then
-    echo -e "${YELLOW}⚠ Пароль не может быть пустым${NC}"
-    exit 1
-fi
+# Используем стандартные значения из docker-compose.yml
+DB_NAME="mi_era"
+DB_USER="postgres"
+DB_PASSWORD="postgres"
 
-# Создание БД и пользователя
-sudo -u postgres psql <<EOF
-CREATE DATABASE ${DB_NAME};
-CREATE USER ${DB_USER} WITH PASSWORD '${DB_PASSWORD}';
-GRANT ALL PRIVILEGES ON DATABASE ${DB_NAME} TO ${DB_USER};
-\q
-EOF
-
-echo -e "${GREEN}✓ База данных ${DB_NAME} создана${NC}"
-echo -e "${GREEN}✓ Пользователь ${DB_USER} создан${NC}"
+echo -e "${GREEN}✓ Будет использован PostgreSQL из Docker${NC}"
+echo -e "${GREEN}  База данных: ${DB_NAME}${NC}"
+echo -e "${GREEN}  Пользователь: ${DB_USER}${NC}"
 echo ""
 
 # Сохранение конфигурации
@@ -177,7 +166,8 @@ Services:
   Node.js: ${NODE_VERSION}
   npm: ${NPM_VERSION}
   PM2: ${PM2_VERSION}
-  PostgreSQL: ${PG_VERSION}
+  Docker: ${DOCKER_VERSION}
+  Docker Compose: ${COMPOSE_VERSION}
   Nginx: ${NGINX_VERSION}
 
 Next Steps:
@@ -232,26 +222,23 @@ fi
 if [ "$SKIP_CLONE" = false ]; then
     echo -e "${YELLOW}📥 Клонирование репозитория...${NC}"
     
-    # Переключаемся на пользователя deploy для клонирования
-    sudo -u deploy bash <<DEPLOY_SCRIPT
-cd /var/www
-if [ -d "mi-era" ]; then
-    echo -e "${YELLOW}⚠ Директория mi-era уже существует${NC}"
-    read -p "Удалить и клонировать заново? (y/n): " REMOVE_DIR
-    if [ "\$REMOVE_DIR" = "y" ]; then
-        rm -rf mi-era
+    cd /var/www
+    if [ -d "mi-era" ]; then
+        echo -e "${YELLOW}⚠ Директория mi-era уже существует${NC}"
+        read -p "Удалить и клонировать заново? (y/n): " REMOVE_DIR
+        if [ "$REMOVE_DIR" = "y" ]; then
+            rm -rf mi-era
+            git clone ${CLONE_URL} mi-era
+        fi
+    else
         git clone ${CLONE_URL} mi-era
     fi
-else
-    git clone ${CLONE_URL} mi-era
-fi
 
-# Настройка git credential helper для будущих pull
-if [ -d "mi-era/.git" ]; then
-    cd mi-era
-    git config credential.helper store
-fi
-DEPLOY_SCRIPT
+    # Настройка git credential helper для будущих pull
+    if [ -d "mi-era/.git" ]; then
+        cd mi-era
+        git config credential.helper store
+    fi
 
     if [ -d "/var/www/mi-era" ]; then
         echo -e "${GREEN}✓ Репозиторий клонирован${NC}"
@@ -259,20 +246,16 @@ DEPLOY_SCRIPT
         # Сохраняем токен для GitHub Actions (если приватный)
         if [ "$IS_PRIVATE" = "y" ] && [ ! -z "$GITHUB_TOKEN" ]; then
             # Настраиваем git credential для автоматических pull
-            sudo -u deploy bash <<DEPLOY_SCRIPT
-cd /var/www/mi-era
-git config credential.helper 'store --file=/home/deploy/.git-credentials'
-echo "https://${GITHUB_TOKEN}@github.com" > /home/deploy/.git-credentials
-chmod 600 /home/deploy/.git-credentials
-DEPLOY_SCRIPT
+            cd /var/www/mi-era
+            git config credential.helper 'store --file=/root/.git-credentials'
+            echo "https://${GITHUB_TOKEN}@github.com" > /root/.git-credentials
+            chmod 600 /root/.git-credentials
             echo -e "${GREEN}✓ Git credentials сохранены для автоматических обновлений${NC}"
             
             # Тестовый pull для проверки credentials
             echo -e "${YELLOW}🔄 Проверка git credentials (тестовый pull)...${NC}"
-            sudo -u deploy bash <<DEPLOY_SCRIPT
-cd /var/www/mi-era
-git pull origin main 2>&1 | head -5
-DEPLOY_SCRIPT
+            cd /var/www/mi-era
+            git pull origin main 2>&1 | head -5
             echo -e "${GREEN}✓ Git credentials работают корректно${NC}"
         fi
     else
@@ -297,9 +280,8 @@ if [ "$SKIP_CLONE" = false ] && [ -d "/var/www/mi-era" ]; then
     read -p "Google Analytics ID (опционально, Enter для пропуска): " GA_ID
     
     # Создание .env файла
-    sudo -u deploy bash <<DEPLOY_SCRIPT
-cd /var/www/mi-era
-cat > .env <<EOF
+    cd /var/www/mi-era
+    cat > .env <<ENVFILE
 # Database
 DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@localhost:5432/${DB_NAME}
 
@@ -317,53 +299,63 @@ NODE_ENV=production
 
 # Analytics
 GOOGLE_ANALYTICS_ID=${GA_ID}
-EOF
-DEPLOY_SCRIPT
+ENVFILE
 
     echo -e "${GREEN}✓ Файл .env создан${NC}"
     echo ""
     
+    # Запуск PostgreSQL через Docker Compose
+    echo -e "${YELLOW}🐳 Запуск PostgreSQL в Docker...${NC}"
+    cd /var/www/mi-era
+    docker compose up -d postgres
+    
+    # Ожидание готовности PostgreSQL
+    echo -e "${YELLOW}⏳ Ожидание готовности PostgreSQL...${NC}"
+    sleep 10
+    
+    # Проверка статуса
+    if docker compose ps postgres | grep -q "Up"; then
+        echo -e "${GREEN}✓ PostgreSQL запущен в Docker${NC}"
+    else
+        echo -e "${RED}❌ Не удалось запустить PostgreSQL${NC}"
+        docker compose logs postgres
+        exit 1
+    fi
+    echo ""
+    
     # Установка зависимостей
     echo -e "${YELLOW}📦 Установка зависимостей...${NC}"
-    sudo -u deploy bash <<DEPLOY_SCRIPT
-cd /var/www/mi-era
-npm install
-DEPLOY_SCRIPT
+    cd /var/www/mi-era
+    npm install
     
     echo -e "${GREEN}✓ Зависимости установлены${NC}"
     echo ""
     
     # Применение миграций БД
     echo -e "${YELLOW}🗄️  Применение схемы базы данных...${NC}"
-    sudo -u deploy bash <<DEPLOY_SCRIPT
-cd /var/www/mi-era
-npm run db:push 2>/dev/null || echo "Команда db:push не найдена, пропускаем"
-npm run db:seed 2>/dev/null || echo "Команда db:seed не найдена, пропускаем"
-DEPLOY_SCRIPT
+    cd /var/www/mi-era
+    npm run db:push 2>/dev/null || echo "Команда db:push не найдена, пропускаем"
+    npm run db:seed 2>/dev/null || echo "Команда db:seed не найдена, пропускаем"
     
     echo -e "${GREEN}✓ База данных настроена${NC}"
     echo ""
     
     # Build проекта
     echo -e "${YELLOW}🔨 Сборка проекта...${NC}"
-    sudo -u deploy bash <<DEPLOY_SCRIPT
-cd /var/www/mi-era
-npm run build
-DEPLOY_SCRIPT
+    cd /var/www/mi-era
+    npm run build
     
     echo -e "${GREEN}✓ Проект собран${NC}"
     echo ""
     
     # Запуск с PM2
     echo -e "${YELLOW}🚀 Запуск приложения с PM2...${NC}"
-    sudo -u deploy bash <<DEPLOY_SCRIPT
-cd /var/www/mi-era
-pm2 start npm --name "mi-era" -- start
-pm2 save
-DEPLOY_SCRIPT
+    cd /var/www/mi-era
+    pm2 start npm --name "mi-era" -- start
+    pm2 save
     
     # Настройка автозапуска PM2
-    sudo -u deploy pm2 startup systemd -u deploy --hp /home/deploy | grep "sudo" | bash
+    pm2 startup systemd -u root --hp /root | grep "sudo" | bash || true
     
     echo -e "${GREEN}✓ Приложение запущено${NC}"
     echo ""
@@ -473,18 +465,18 @@ if [ "$SKIP_CLONE" = false ]; then
 else
     echo "Следующие шаги:"
     echo ""
-    echo "1. Переключитесь на пользователя deploy:"
-    echo "   su - deploy"
-    echo ""
-    echo "2. Клонируйте репозиторий:"
+    echo "1. Клонируйте репозиторий:"
     echo "   cd /var/www"
     echo "   git clone <your-repo-url> mi-era"
     echo ""
-    echo "3. Создайте .env файл:"
+    echo "2. Создайте .env файл:"
     echo "   cd mi-era"
     echo "   nano .env"
     echo ""
     echo "   DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@localhost:5432/${DB_NAME}"
+    echo ""
+    echo "3. Запустите PostgreSQL в Docker:"
+    echo "   docker compose up -d postgres"
     echo ""
     echo "4. Установите зависимости и запустите:"
     echo "   npm install"

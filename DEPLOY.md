@@ -372,23 +372,74 @@ pm2 startup
 В настройках репозитория GitHub (Settings → Secrets and variables → Actions) добавить:
 
 1. **SSH_HOST** - IP адрес или домен сервера (например: `123.45.67.89`)
-2. **SSH_USER** - пользователь SSH (например: `ubuntu` или `root`)
-3. **SSH_KEY** - приватный SSH ключ (содержимое `~/.ssh/id_rsa`)
+2. **SSH_USER** - пользователь SSH (обычно `deploy`)
+3. **SSH_KEY** - приватный SSH ключ (см. инструкцию ниже)
 4. **SSH_PORT** - порт SSH (обычно `22`)
 
-#### Генерация SSH ключа (если нужно)
+#### Генерация и настройка SSH ключа для GitHub Actions
 
-На локальной машине:
+**На локальной машине:**
+
 ```bash
-ssh-keygen -t rsa -b 4096 -C "github-actions"
+# Генерация нового SSH ключа специально для GitHub Actions
+ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/github-actions-deploy -N ""
+
+# Это создаст два файла:
+# ~/.ssh/github-actions-deploy (приватный ключ)
+# ~/.ssh/github-actions-deploy.pub (публичный ключ)
 ```
 
-Скопировать публичный ключ на сервер:
+**Добавление публичного ключа на сервер:**
+
 ```bash
-ssh-copy-id -i ~/.ssh/id_rsa.pub user@server
+# Скопировать публичный ключ на сервер
+ssh-copy-id -i ~/.ssh/github-actions-deploy.pub deploy@your-server-ip
+
+# Или вручную:
+cat ~/.ssh/github-actions-deploy.pub
+# Скопировать вывод и добавить в /home/deploy/.ssh/authorized_keys на сервере
 ```
 
-Содержимое приватного ключа (`~/.ssh/id_rsa`) добавить в GitHub Secret `SSH_KEY`.
+**Проверка подключения:**
+
+```bash
+ssh -i ~/.ssh/github-actions-deploy deploy@your-server-ip
+```
+
+**Добавление приватного ключа в GitHub Secret:**
+
+```bash
+# Вывести приватный ключ
+cat ~/.ssh/github-actions-deploy
+
+# Скопировать ВЕСЬ вывод, включая строки:
+# -----BEGIN OPENSSH PRIVATE KEY-----
+# ...содержимое ключа...
+# -----END OPENSSH PRIVATE KEY-----
+```
+
+В GitHub:
+1. Перейти в `Settings → Secrets and variables → Actions`
+2. Нажать `New repository secret`
+3. Name: `SSH_KEY`
+4. Value: Вставить **весь** скопированный приватный ключ (включая BEGIN и END строки)
+5. Нажать `Add secret`
+
+**ВАЖНО:** 
+- Ключ должен быть вставлен полностью, со всеми переносами строк
+- Не должно быть лишних пробелов в начале или конце
+- Формат должен быть точно как в файле
+
+#### Альтернатива: использование существующего ключа
+
+Если у вас уже есть SSH ключ на сервере:
+
+```bash
+# На локальной машине
+cat ~/.ssh/id_ed25519  # или ~/.ssh/id_rsa
+
+# Скопировать весь вывод и добавить в GitHub Secret SSH_KEY
+```
 
 ### Nginx конфигурация (опционально)
 
