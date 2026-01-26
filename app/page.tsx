@@ -3,6 +3,7 @@
 import { Header, Footer } from "../src/components/ui";
 import { Hero, Statistics, Benefits, KeyFeatures, HowItWorks, Testimonials, Pricing, DownloadCTA, FAQ } from "../src/components/sections";
 import { CheckCircleIcon, ShieldIcon, TargetIcon, HeartIcon, LightbulbIcon, TrophyIcon } from "../src/components/icons/BenefitIcons";
+import Script from "next/script";
 
 export default function Home() {
   // Hero section content
@@ -305,6 +306,65 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-brand-white flex flex-col">
+      {/* Structured Data for SEO */}
+      <Script
+        id="organization-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'mi-Era',
+            url: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+            logo: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/assets/logo.png`,
+            description: 'A mobile task-tracking app with AI assistant designed for teenagers aged 13-18. Own your era with no guilt, no pressure - just growth.',
+            contactPoint: {
+              '@type': 'ContactPoint',
+              email: 'no-reply@mi-era.org',
+              contactType: 'Customer Service',
+            },
+          }),
+        }}
+      />
+      <Script
+        id="website-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'mi-Era',
+            url: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+            description: 'A reliable space where teens can grow',
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: {
+                '@type': 'EntryPoint',
+                urlTemplate: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/blog?search={search_term_string}`,
+              },
+              'query-input': 'required name=search_term_string',
+            },
+          }),
+        }}
+      />
+      <Script
+        id="faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: faqData.items.map((faq) => ({
+              '@type': 'Question',
+              name: faq.question,
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: faq.answer,
+              },
+            })),
+          }),
+        }}
+      />
       <Header />
       <main className="flex-grow">
         {/* Hero Section */}

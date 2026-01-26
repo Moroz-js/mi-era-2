@@ -372,6 +372,11 @@ This implementation plan breaks down the mi-Era landing page into discrete, incr
   - Verify environment variables are documented
   - Ask the user if questions arise
 
+## Additional Features
+
+For SEO optimization and Admin Panel implementation, see separate task file:
+**[tasks-seo-admin.md](./tasks-seo-admin.md)** (Tasks 20-31)
+
 ## Notes
 
 - Tasks marked with `*` are optional and can be skipped for faster MVP

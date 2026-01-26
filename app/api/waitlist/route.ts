@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/lib/db/client';
+import { waitlistEmails } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
 import { sendConfirmation } from '@/lib/email/service';
 
 // RFC 5322 compliant email validation regex
@@ -42,8 +45,37 @@ export async function POST(request: NextRequest) {
     // Normalize email (lowercase)
     const normalizedEmail = email.toLowerCase().trim();
 
+    // Check if email already exists
+    const existingEmail = await db
+      .select()
+      .from(waitlistEmails)
+      .where(eq(waitlistEmails.email, normalizedEmail))
+      .limit(1);
+
+    // Handle duplicate emails gracefully (idempotent)
+    if (existingEmail.length > 0) {
+      return NextResponse.json<WaitlistResponse>(
+        {
+          success: true,
+          message: 'You are already on the waitlist!',
+        },
+        { status: 200 }
+      );
+    }
+
+    // Insert new email into database
+    await db.insert(waitlistEmails).values({
+      email: normalizedEmail,
+    });
+
     // Send confirmation email
-    await sendConfirmation(normalizedEmail);
+    try {
+      await sendConfirmation(normalizedEmail);
+    } catch (emailError) {
+      // Log email error but don't fail the request
+      // Email is already stored in database
+      console.error('Failed to send confirmation email:', emailError);
+    }
 
     return NextResponse.json<WaitlistResponse>(
       {

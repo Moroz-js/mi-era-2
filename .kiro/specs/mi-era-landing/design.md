@@ -72,9 +72,32 @@ mi-era-landing/
 │   │   ├── page.tsx                # Home page (all sections)
 │   │   ├── privacy/page.tsx        # Privacy Policy
 │   │   ├── terms/page.tsx          # Terms of Use
+│   │   ├── about/page.tsx          # About Us page
+│   │   ├── blog/
+│   │   │   ├── page.tsx            # Blog listing page
+│   │   │   └── [slug]/page.tsx    # Individual blog post page
+│   │   ├── admin/
+│   │   │   ├── layout.tsx          # Admin layout with auth check
+│   │   │   ├── login/page.tsx      # Admin login page
+│   │   │   ├── dashboard/page.tsx  # Admin dashboard
+│   │   │   ├── blog/
+│   │   │   │   ├── page.tsx        # Blog posts list
+│   │   │   │   ├── new/page.tsx    # Create new post
+│   │   │   │   └── [id]/page.tsx   # Edit post
+│   │   │   ├── pages/
+│   │   │   │   └── [slug]/page.tsx # Edit static pages
+│   │   │   └── waitlist/page.tsx   # Waitlist management
+│   │   ├── sitemap.xml/route.ts    # Dynamic sitemap generation
+│   │   ├── robots.txt/route.ts     # Robots.txt file
 │   │   └── api/
 │   │       ├── waitlist/route.ts   # Waitlist submission endpoint
-│   │       └── consent/route.ts    # Cookie consent management
+│   │       ├── consent/route.ts    # Cookie consent management
+│   │       ├── admin/
+│   │       │   ├── auth/route.ts   # Admin authentication
+│   │       │   ├── blog/route.ts   # Blog CRUD operations
+│   │       │   ├── pages/route.ts  # Static pages CRUD
+│   │       │   ├── upload/route.ts # Image upload handler
+│   │       │   └── export/route.ts # Waitlist CSV export
 │   ├── components/
 │   │   ├── sections/
 │   │   │   ├── Hero.tsx
@@ -92,6 +115,14 @@ mi-era-landing/
 │   │   │   ├── Footer.tsx
 │   │   │   ├── WaitlistForm.tsx
 │   │   │   └── CookieBanner.tsx
+│   │   ├── admin/
+│   │   │   ├── AdminNav.tsx        # Admin navigation sidebar
+│   │   │   ├── AdminHeader.tsx     # Admin header with logout
+│   │   │   ├── BlogEditor.tsx      # TipTap blog editor
+│   │   │   ├── PageEditor.tsx      # TipTap page editor
+│   │   │   ├── BlogList.tsx        # Blog posts table
+│   │   │   ├── WaitlistTable.tsx   # Waitlist emails table
+│   │   │   └── ImageUpload.tsx     # Image upload component
 │   │   └── icons/
 │   │       ├── StarIcon.tsx        # Custom star symbol
 │   │       └── [other-icons].tsx   # Placeholder icons
@@ -105,12 +136,23 @@ mi-era-landing/
 │   │   │   └── templates.ts        # Email template variables
 │   │   ├── analytics/
 │   │   │   └── consent.ts          # Analytics tag management
+│   │   ├── admin/
+│   │   │   ├── auth.ts             # Admin authentication logic
+│   │   │   ├── session.ts          # Session management
+│   │   │   └── middleware.ts       # Auth middleware
+│   │   ├── seo/
+│   │   │   ├── metadata.ts         # Meta tags generation
+│   │   │   ├── structured-data.ts  # JSON-LD schema generation
+│   │   │   └── sitemap.ts          # Sitemap generation logic
 │   │   └── utils/
 │   │       ├── validation.ts       # Email validation
-│   │       └── fonts.ts            # Google Fonts configuration
+│   │       ├── fonts.ts            # Google Fonts configuration
+│   │       ├── upload.ts           # File upload utilities
+│   │       └── csv.ts              # CSV export utilities
 │   └── styles/
 │       └── globals.css             # Tailwind imports + custom styles
 ├── public/
+│   ├── uploads/                    # User-uploaded images
 │   ├── placeholders/
 │   │   ├── logo.svg                # Logo placeholder
 │   │   ├── app-screenshot-*.png   # Screenshot placeholders
@@ -301,7 +343,7 @@ interface ConsentResponse {
 
 ```typescript
 // Drizzle schema
-import { pgTable, serial, varchar, timestamp, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, timestamp, boolean, text, integer } from 'drizzle-orm/pg-core';
 
 export const waitlistEmails = pgTable('waitlist_emails', {
   id: serial('id').primaryKey(),
@@ -315,6 +357,59 @@ export const consentLogs = pgTable('consent_logs', {
   sessionId: varchar('session_id', { length: 255 }).notNull(),
   analytics: boolean('analytics').notNull(),
   timestamp: timestamp('timestamp').defaultNow().notNull(),
+});
+
+export const blogPosts = pgTable('blog_posts', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  slug: varchar('slug', { length: 255 }).notNull().unique(),
+  excerpt: text('excerpt'),
+  content: text('content').notNull(),
+  featuredImage: varchar('featured_image', { length: 500 }),
+  status: varchar('status', { length: 20 }).notNull().default('draft'), // 'draft' | 'published'
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const blogCategories = pgTable('blog_categories', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 100 }).notNull().unique(),
+  slug: varchar('slug', { length: 100 }).notNull().unique(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const blogTags = pgTable('blog_tags', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 100 }).notNull().unique(),
+  slug: varchar('slug', { length: 100 }).notNull().unique(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const blogPostCategories = pgTable('blog_post_categories', {
+  id: serial('id').primaryKey(),
+  postId: integer('post_id').notNull().references(() => blogPosts.id, { onDelete: 'cascade' }),
+  categoryId: integer('category_id').notNull().references(() => blogCategories.id, { onDelete: 'cascade' }),
+});
+
+export const blogPostTags = pgTable('blog_post_tags', {
+  id: serial('id').primaryKey(),
+  postId: integer('post_id').notNull().references(() => blogPosts.id, { onDelete: 'cascade' }),
+  tagId: integer('tag_id').notNull().references(() => blogTags.id, { onDelete: 'cascade' }),
+});
+
+export const staticPages = pgTable('static_pages', {
+  id: serial('id').primaryKey(),
+  slug: varchar('slug', { length: 100 }).notNull().unique(), // 'about', 'privacy', 'terms'
+  title: varchar('title', { length: 255 }).notNull(),
+  content: text('content').notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const adminSessions = pgTable('admin_sessions', {
+  id: serial('id').primaryKey(),
+  sessionToken: varchar('session_token', { length: 255 }).notNull().unique(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 ```
 
@@ -361,7 +456,202 @@ interface AnalyticsManager {
 // Dynamically loads/removes Google Analytics based on consent
 ```
 
-## Data Models
+### Admin Components
+
+**Admin Authentication**
+```typescript
+interface LoginFormProps {
+  onSuccess: () => void;
+}
+
+interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+interface AuthResponse {
+  success: boolean;
+  error?: string;
+}
+```
+
+**Blog Editor Component**
+```typescript
+interface BlogEditorProps {
+  post?: BlogPost; // undefined for new post
+  onSave: (post: BlogPostInput) => Promise<void>;
+  onCancel: () => void;
+}
+
+interface BlogPostInput {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  featuredImage: string | null;
+  status: 'draft' | 'published';
+  categoryIds: number[];
+  tagIds: number[];
+}
+```
+
+**Page Editor Component**
+```typescript
+interface PageEditorProps {
+  page: StaticPage;
+  onSave: (content: string) => Promise<void>;
+  onCancel: () => void;
+}
+```
+
+**Waitlist Table Component**
+```typescript
+interface WaitlistTableProps {
+  emails: WaitlistEmail[];
+  onExport: () => void;
+}
+```
+
+### Admin API Routes
+
+**Authentication API**
+```typescript
+// POST /api/admin/auth
+interface AdminLoginRequest {
+  username: string;
+  password: string;
+}
+
+interface AdminLoginResponse {
+  success: boolean;
+  error?: string;
+}
+
+// POST /api/admin/logout
+interface AdminLogoutResponse {
+  success: boolean;
+}
+```
+
+**Blog Management API**
+```typescript
+// GET /api/admin/blog
+interface BlogListResponse {
+  posts: BlogPost[];
+  total: number;
+}
+
+// POST /api/admin/blog
+interface CreateBlogRequest {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  featuredImage: string | null;
+  status: 'draft' | 'published';
+  categoryIds: number[];
+  tagIds: number[];
+}
+
+interface CreateBlogResponse {
+  success: boolean;
+  post?: BlogPost;
+  error?: string;
+}
+
+// PUT /api/admin/blog/[id]
+interface UpdateBlogRequest extends CreateBlogRequest {}
+
+interface UpdateBlogResponse {
+  success: boolean;
+  post?: BlogPost;
+  error?: string;
+}
+
+// DELETE /api/admin/blog/[id]
+interface DeleteBlogResponse {
+  success: boolean;
+  error?: string;
+}
+```
+
+**Static Pages API**
+```typescript
+// GET /api/admin/pages/[slug]
+interface GetPageResponse {
+  page: StaticPage;
+}
+
+// PUT /api/admin/pages/[slug]
+interface UpdatePageRequest {
+  title: string;
+  content: string;
+}
+
+interface UpdatePageResponse {
+  success: boolean;
+  page?: StaticPage;
+  error?: string;
+}
+```
+
+**Image Upload API**
+```typescript
+// POST /api/admin/upload
+interface UploadImageRequest {
+  file: File; // multipart/form-data
+}
+
+interface UploadImageResponse {
+  success: boolean;
+  url?: string;
+  error?: string;
+}
+```
+
+**Waitlist Export API**
+```typescript
+// GET /api/admin/export
+// Returns CSV file with headers: email,signup_date,confirmed
+// Content-Type: text/csv
+// Content-Disposition: attachment; filename="waitlist-{date}.csv"
+```
+
+### SEO Services
+
+**Metadata Generation**
+```typescript
+interface MetadataService {
+  generatePageMetadata(page: string, data?: any): PageMetadata;
+  generateBlogMetadata(post: BlogPost): PageMetadata;
+}
+```
+
+**Structured Data Generation**
+```typescript
+interface StructuredDataService {
+  generateOrganization(): StructuredData;
+  generateWebSite(): StructuredData;
+  generateBlogPosting(post: BlogPost): StructuredData;
+  generateFAQPage(faqs: FAQItem[]): StructuredData;
+}
+```
+
+**Sitemap Generation**
+```typescript
+interface SitemapService {
+  generateSitemap(): Promise<string>; // Returns XML string
+}
+
+interface SitemapEntry {
+  url: string;
+  lastModified: Date;
+  changeFrequency: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+  priority: number; // 0.0 to 1.0
+}
+```
+
+## Correctness Properties
 
 ### Waitlist Email
 
@@ -447,6 +737,126 @@ export default {
   },
 };
 ```
+
+### Blog Post Model
+
+```typescript
+interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content: string;
+  featuredImage: string | null;
+  status: 'draft' | 'published';
+  categories: BlogCategory[];
+  tags: BlogTag[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface BlogCategory {
+  id: number;
+  name: string;
+  slug: string;
+  createdAt: Date;
+}
+
+interface BlogTag {
+  id: number;
+  name: string;
+  slug: string;
+  createdAt: Date;
+}
+```
+
+**Validation Rules:**
+- Title: 1-255 characters, required
+- Slug: 1-255 characters, unique, URL-safe, required
+- Content: required
+- Status: must be 'draft' or 'published'
+- Featured image: valid URL or file path
+
+### Static Page Model
+
+```typescript
+interface StaticPage {
+  id: number;
+  slug: 'about' | 'privacy' | 'terms';
+  title: string;
+  content: string;
+  updatedAt: Date;
+}
+```
+
+**Validation Rules:**
+- Slug: must be one of: 'about', 'privacy', 'terms'
+- Title: 1-255 characters, required
+- Content: required
+
+### Admin Session Model
+
+```typescript
+interface AdminSession {
+  id: number;
+  sessionToken: string;
+  expiresAt: Date;
+  createdAt: Date;
+}
+```
+
+**Session Management:**
+- Session token: 32-byte random string, base64 encoded
+- Expiration: 24 hours from creation
+- Storage: PostgreSQL + HTTP-only cookie
+
+### SEO Metadata Model
+
+```typescript
+interface PageMetadata {
+  title: string;
+  description: string;
+  canonical: string;
+  openGraph: {
+    title: string;
+    description: string;
+    image: string;
+    type: 'website' | 'article';
+  };
+  twitter: {
+    card: 'summary_large_image';
+    title: string;
+    description: string;
+    image: string;
+  };
+}
+
+interface StructuredData {
+  '@context': 'https://schema.org';
+  '@type': 'Organization' | 'WebSite' | 'BlogPosting' | 'FAQPage';
+  [key: string]: any;
+}
+```
+
+### Image Upload Model
+
+```typescript
+interface UploadedImage {
+  filename: string;
+  originalName: string;
+  path: string;
+  url: string;
+  size: number;
+  mimeType: string;
+  uploadedAt: Date;
+}
+```
+
+**Upload Constraints:**
+- Allowed types: image/jpeg, image/png, image/gif, image/webp
+- Maximum size: 5MB
+- Storage location: /public/uploads
+- Filename format: {timestamp}-{random}-{sanitized-original-name}
 
 ## Correctness Properties
 
@@ -668,6 +1078,102 @@ After analyzing all acceptance criteria, several properties can be consolidated:
 
 **Validates: Requirements 18.5**
 
+---
+
+**Property 27: Sitemap Inclusion of Published Content**
+
+*For any* published blog post or public page, that page's URL must appear in the generated sitemap.xml file.
+
+**Validates: Requirements 19.1**
+
+---
+
+**Property 28: Meta Tags Presence**
+
+*For any* public page, the HTML head must contain meta tags for title, description, og:title, og:description, og:image, and twitter:card.
+
+**Validates: Requirements 19.3**
+
+---
+
+**Property 29: Structured Data Validity**
+
+*For any* page with JSON-LD structured data, the structured data must be valid according to schema.org specifications and include required properties for its type.
+
+**Validates: Requirements 19.4, 19.5, 19.6, 19.7**
+
+---
+
+**Property 30: Admin Route Protection**
+
+*For any* request to /admin/* routes without a valid session, the application must redirect to the login page.
+
+**Validates: Requirements 20.2, 20.6**
+
+---
+
+**Property 31: Admin Authentication Validation**
+
+*For any* login attempt with credentials other than username="admin" and password="mi-era-admin", the authentication must fail and return an error message.
+
+**Validates: Requirements 20.3, 20.5**
+
+---
+
+**Property 32: Draft Post Exclusion**
+
+*For any* blog post with status="draft", that post must not appear in the public blog listing or be accessible via its public URL.
+
+**Validates: Requirements 21.10**
+
+---
+
+**Property 33: Published Post Inclusion**
+
+*For any* blog post with status="published", that post must appear in the public blog listing and be accessible via its public URL.
+
+**Validates: Requirements 21.11**
+
+---
+
+**Property 34: Blog Slug Uniqueness**
+
+*For any* two blog posts in the database, their slug values must be different (unique constraint).
+
+**Validates: Requirements 21.4**
+
+---
+
+**Property 35: Image Upload Validation**
+
+*For any* file upload attempt, if the file type is not one of [image/jpeg, image/png, image/gif, image/webp] or the file size exceeds 5MB, the upload must be rejected with an appropriate error message.
+
+**Validates: Requirements 24.3, 24.4**
+
+---
+
+**Property 36: Uploaded Image Accessibility**
+
+*For any* successfully uploaded image, the image must be accessible via a public URL in the format /uploads/{filename}.
+
+**Validates: Requirements 24.8**
+
+---
+
+**Property 37: CSV Export Format**
+
+*For any* waitlist CSV export, the file must contain headers "email,signup_date,confirmed" and each row must contain valid data for these three columns.
+
+**Validates: Requirements 23.5**
+
+---
+
+**Property 38: Static Page Content Persistence**
+
+*For any* static page update, the new content must be retrievable from the database immediately after save, and the public page must display the updated content.
+
+**Validates: Requirements 22.5, 22.6**
+
 ## Error Handling
 
 ### Client-Side Error Handling
@@ -694,6 +1200,7 @@ After analyzing all acceptance criteria, several properties can be consolidated:
 **Database Errors**
 - Connection failures return 500 status with generic error message
 - Duplicate email constraint violations return 200 status (idempotent)
+- Duplicate slug constraint violations return 400 status with specific error
 - Query errors are logged server-side but not exposed to client
 
 **Email Service Errors**
@@ -705,6 +1212,23 @@ After analyzing all acceptance criteria, several properties can be consolidated:
 - Invalid email format returns 400 status with validation message
 - Missing required fields return 400 status with field-specific errors
 - Malformed request body returns 400 status with generic error
+
+**Admin Authentication Errors**
+- Invalid credentials return 401 status with error message
+- Expired session returns 401 status and redirects to login
+- Missing session token returns 401 status and redirects to login
+
+**File Upload Errors**
+- Invalid file type returns 400 status with "Invalid file type" message
+- File size exceeds limit returns 400 status with "File too large" message
+- File system write errors return 500 status with generic error message
+- Disk space errors are logged and return 500 status
+
+**Blog Management Errors**
+- Duplicate slug returns 400 status with "Slug already exists" message
+- Invalid post ID returns 404 status with "Post not found" message
+- Missing required fields return 400 status with field-specific errors
+- Database constraint violations return 400 status with descriptive errors
 
 ### Error Logging
 
@@ -791,22 +1315,43 @@ __tests__/
 │   ├── components/
 │   │   ├── Button.test.tsx
 │   │   ├── WaitlistForm.test.tsx
-│   │   └── CookieBanner.test.tsx
+│   │   ├── CookieBanner.test.tsx
+│   │   ├── BlogEditor.test.tsx
+│   │   ├── PageEditor.test.tsx
+│   │   └── WaitlistTable.test.tsx
 │   ├── api/
 │   │   ├── waitlist.test.ts
-│   │   └── consent.test.ts
+│   │   ├── consent.test.ts
+│   │   ├── admin-auth.test.ts
+│   │   ├── admin-blog.test.ts
+│   │   ├── admin-pages.test.ts
+│   │   ├── admin-upload.test.ts
+│   │   └── admin-export.test.ts
 │   └── lib/
 │       ├── validation.test.ts
-│       └── email.test.ts
+│       ├── email.test.ts
+│       ├── auth.test.ts
+│       ├── upload.test.ts
+│       ├── csv.test.ts
+│       ├── metadata.test.ts
+│       ├── structured-data.test.ts
+│       └── sitemap.test.ts
 ├── properties/
 │   ├── brand-compliance.test.ts
 │   ├── button-styling.test.ts
 │   ├── email-handling.test.ts
 │   ├── consent-management.test.ts
-│   └── accessibility.test.ts
+│   ├── accessibility.test.ts
+│   ├── seo-metadata.test.ts
+│   ├── admin-auth.test.ts
+│   ├── blog-management.test.ts
+│   └── image-upload.test.ts
 └── integration/
     ├── waitlist-flow.test.tsx
-    └── consent-flow.test.tsx
+    ├── consent-flow.test.tsx
+    ├── admin-login-flow.test.tsx
+    ├── blog-crud-flow.test.tsx
+    └── page-edit-flow.test.tsx
 ```
 
 ### Testing Tools

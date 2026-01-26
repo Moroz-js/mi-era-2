@@ -1,60 +1,65 @@
-'use client';
-
 import { Header, Footer } from "../../src/components/ui";
 import Link from "next/link";
+import { generatePageMetadata } from "@/lib/seo/metadata";
+import { generateBlog } from "@/lib/seo/structured-data";
+import type { Metadata } from "next";
+import { db } from "@/lib/db/client";
+import { blogPosts } from "@/lib/db/schema";
+import { eq, desc } from "drizzle-orm";
+
+export const metadata: Metadata = generatePageMetadata('blog');
 
 interface BlogPost {
+  id: number;
   slug: string;
-  category: string;
-  categoryColor: string;
-  date: string;
   title: string;
-  excerpt: string;
-  image: string;
+  excerpt: string | null;
+  featuredImage: string | null;
+  createdAt: Date;
 }
 
-export default function BlogPage() {
-  const blogPosts: BlogPost[] = [
-    {
-      slug: "how-to-build-good-habits",
-      category: "Habits",
-      categoryColor: "bg-purple-200 text-purple-700",
-      date: "February 1, 2024",
-      title: "How to Build Good Habits Without Forcing Yourself",
-      excerpt: "Discover the science of habit formation and learn how to create lasting positive changes without willpower or force.",
-      image: "/placeholders/blog-habits.png",
-    },
-    {
-      slug: "how-to-deal-with-anxiety",
-      category: "Mental Health",
-      categoryColor: "bg-blue-200 text-blue-700",
-      date: "January 25, 2024",
-      title: "How to Deal with Anxiety and Pressure as a Teen",
-      excerpt: "Practical techniques to manage stress, anxiety, and pressure from school, social situations, and expectations.",
-      image: "/placeholders/blog-anxiety.png",
-    },
-    {
-      slug: "how-to-get-everything-done",
-      category: "Productivity",
-      categoryColor: "bg-pink-200 text-pink-700",
-      date: "January 20, 2024",
-      title: "How to Get Everything Done Without Feeling Overwhelmed",
-      excerpt: "Learn effective time management techniques and prioritization strategies to handle your workload without stress.",
-      image: "/placeholders/blog-productivity.png",
-    },
-    {
-      slug: "how-to-stay-motivated",
-      category: "Motivation",
-      categoryColor: "bg-purple-200 text-purple-700",
-      date: "January 15, 2024",
-      title: "How to Stay Motivated When You Don't Feel Like Doing Anything",
-      excerpt: "Discover practical strategies to overcome lack of motivation and get back on track with your goals.",
-      image: "/placeholders/blog-motivation.png",
-    },
-  ];
+async function getPublishedPosts(): Promise<BlogPost[]> {
+  try {
+    const posts = await db
+      .select({
+        id: blogPosts.id,
+        slug: blogPosts.slug,
+        title: blogPosts.title,
+        excerpt: blogPosts.excerpt,
+        featuredImage: blogPosts.featuredImage,
+        createdAt: blogPosts.createdAt,
+      })
+      .from(blogPosts)
+      .where(eq(blogPosts.status, 'published'))
+      .orderBy(desc(blogPosts.createdAt));
+
+    return posts;
+  } catch (error) {
+    console.error('Error fetching published posts:', error);
+    return [];
+  }
+}
+
+export default async function BlogPage() {
+  const publishedPosts = await getPublishedPosts();
+
+  // Generate structured data for the blog listing page
+  const structuredData = generateBlog(
+    publishedPosts.map((post) => ({
+      slug: post.slug,
+      title: post.title,
+      createdAt: post.createdAt,
+    }))
+  );
 
   return (
     <div className="min-h-screen bg-brand-white flex flex-col">
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+
       <Header />
       
       <main className="flex-grow">
@@ -81,78 +86,89 @@ export default function BlogPage() {
         {/* Blog Posts Grid */}
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-              {blogPosts.map((post) => (
-                <Link 
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="block"
+            {publishedPosts.length === 0 ? (
+              <div className="text-center py-12">
+                <p 
+                  className="text-xl text-gray-600"
+                  style={{ fontFamily: 'var(--font-body)' }}
                 >
-                  <article 
-                    className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 h-full cursor-pointer"
+                  No blog posts yet. Check back soon!
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                {publishedPosts.map((post) => (
+                  <Link 
+                    key={post.slug}
+                    href={`/blog/${post.slug}`}
+                    className="block"
                   >
-                  {/* Image */}
-                  <div className="relative h-48 bg-gradient-to-br from-purple-400 to-purple-600">
-                    <div className="absolute top-4 left-4">
-                      <span 
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${post.categoryColor}`}
-                        style={{ fontFamily: 'var(--font-body)' }}
-                      >
-                        {post.category}
-                      </span>
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <h3 
-                        className="text-white text-xl font-bold px-6 text-center"
-                        style={{ fontFamily: 'var(--font-body)' }}
-                      >
-                        {post.title}
-                      </h3>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span 
-                        className={`inline-block px-2 py-1 rounded text-xs font-semibold ${post.categoryColor}`}
-                        style={{ fontFamily: 'var(--font-body)' }}
-                      >
-                        {post.category}
-                      </span>
-                      <span 
-                        className="text-sm text-gray-500"
-                        style={{ fontFamily: 'var(--font-body)' }}
-                      >
-                        {post.date}
-                      </span>
-                    </div>
-
-                    <h2 
-                      className="text-xl font-bold text-brand-black mb-3"
-                      style={{ fontFamily: 'var(--font-body)' }}
+                    <article 
+                      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 h-full cursor-pointer"
                     >
-                      {post.title}
-                    </h2>
+                      {/* Image */}
+                      <div className="relative h-48 bg-gradient-to-br from-purple-400 to-purple-600">
+                        {post.featuredImage ? (
+                          <img 
+                            src={post.featuredImage} 
+                            alt={post.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <h3 
+                              className="text-white text-xl font-bold px-6 text-center"
+                              style={{ fontFamily: 'var(--font-body)' }}
+                            >
+                              {post.title}
+                            </h3>
+                          </div>
+                        )}
+                      </div>
 
-                    <p 
-                      className="text-gray-600 text-sm mb-4 leading-relaxed"
-                      style={{ fontFamily: 'var(--font-body)' }}
-                    >
-                      {post.excerpt}
-                    </p>
+                      {/* Content */}
+                      <div className="p-6">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span 
+                            className="text-sm text-gray-500"
+                            style={{ fontFamily: 'var(--font-body)' }}
+                          >
+                            {new Date(post.createdAt).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            })}
+                          </span>
+                        </div>
 
-                    <span 
-                      className="text-brand-violet font-semibold text-sm hover:text-brand-yellow transition-colors"
-                      style={{ fontFamily: 'var(--font-body)' }}
-                    >
-                      Read More →
-                    </span>
-                  </div>
-                </article>
-                </Link>
-              ))}
-            </div>
+                        <h2 
+                          className="text-xl font-bold text-brand-black mb-3"
+                          style={{ fontFamily: 'var(--font-body)' }}
+                        >
+                          {post.title}
+                        </h2>
+
+                        {post.excerpt && (
+                          <p 
+                            className="text-gray-600 text-sm mb-4 leading-relaxed"
+                            style={{ fontFamily: 'var(--font-body)' }}
+                          >
+                            {post.excerpt}
+                          </p>
+                        )}
+
+                        <span 
+                          className="text-brand-violet font-semibold text-sm hover:text-brand-yellow transition-colors"
+                          style={{ fontFamily: 'var(--font-body)' }}
+                        >
+                          Read More →
+                        </span>
+                      </div>
+                    </article>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>

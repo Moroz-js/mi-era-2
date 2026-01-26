@@ -1,8 +1,23 @@
-'use client';
-
 import { Header, Footer } from "../../src/components/ui";
+import { generatePageMetadata } from "@/lib/seo/metadata";
+import { getStaticPage } from "@/lib/db/static-pages";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-export default function TermsOfUse() {
+export const metadata: Metadata = generatePageMetadata('terms');
+
+// Revalidate every hour to pick up content changes
+export const revalidate = 3600;
+
+export default async function TermsOfUse() {
+  // Fetch page content from database
+  const page = await getStaticPage('terms');
+
+  // If page doesn't exist in database, show 404
+  if (!page) {
+    notFound();
+  }
+
   return (
     <div className="min-h-screen bg-brand-white flex flex-col">
       <Header />
@@ -11,39 +26,18 @@ export default function TermsOfUse() {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <h1 className="text-4xl md:text-5xl font-heading text-brand-black mb-8">
-                Terms of Use
+                {page.title}
               </h1>
               
-              <div className="prose prose-lg max-w-none font-body text-brand-black">
-                <p className="text-xl mb-6">
-                  [Terms of Use content will be added here]
-                </p>
-                
-                <p className="mb-6">
-                  This is a placeholder for the Mi-Era Terms of Use. The actual terms of use content will be provided by the legal team and inserted here.
-                </p>
-                
-                <p className="mb-6">
-                  The terms of use will cover:
-                </p>
-                
-                <ul className="list-disc pl-6 mb-6 space-y-2">
-                  <li>Acceptance of terms</li>
-                  <li>User eligibility and age requirements</li>
-                  <li>Account registration and security</li>
-                  <li>Acceptable use policy</li>
-                  <li>Intellectual property rights</li>
-                  <li>User-generated content</li>
-                  <li>Limitation of liability</li>
-                  <li>Termination of service</li>
-                  <li>Dispute resolution</li>
-                  <li>Changes to terms</li>
-                </ul>
-                
-                <p className="text-sm text-gray-600 mt-8">
-                  Last updated: [Date to be added]
-                </p>
-              </div>
+              {/* Render HTML content from database */}
+              <div 
+                className="prose prose-lg max-w-none font-body text-brand-black"
+                dangerouslySetInnerHTML={{ __html: page.content }}
+              />
+              
+              <p className="text-sm text-gray-600 mt-8">
+                Last updated: {new Date(page.updatedAt).toLocaleDateString()}
+              </p>
             </div>
           </div>
         </section>
