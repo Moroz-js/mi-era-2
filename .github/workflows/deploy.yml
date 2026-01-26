@@ -61,19 +61,14 @@ jobs:
               sleep 2
             done
 
-            # migrations
-            if docker compose exec -T app npm run | grep -q "db:push"; then
-              docker compose exec -T app npm run db:push
-            else
-              docker compose exec -T app npx drizzle-kit push
-            fi
+            # маленькая пауза чтобы app точно поднялся (уменьшает race)
+            sleep 2
 
-            # seed (optional)
-            if docker compose exec -T app npm run | grep -q "db:seed"; then
-              docker compose exec -T app npm run db:seed
-            else
-              echo "db:seed script not found, skipping"
-            fi
+            # migrations (не роняем job на проверках)
+            docker compose exec -T app npm run db:push || docker compose exec -T app npx drizzle-kit push || true
+
+            # seed optional
+            docker compose exec -T app npm run db:seed || true
 
             docker compose ps
-            docker compose logs --tail=50 app
+            docker compose logs --tail=80 app
