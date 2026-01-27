@@ -61,7 +61,7 @@ export function Footer() {
               <li>
                 <button 
                   onClick={() => {
-                    const waitlistSection = document.getElementById('waitlist');
+                    const waitlistSection = document.getElementById('waitlist-form');
                     if (waitlistSection) {
                       waitlistSection.scrollIntoView({ behavior: 'smooth' });
                     }
