@@ -61,12 +61,19 @@ export function Footer() {
               <li>
                 <button 
                   onClick={() => {
-                    const waitlistSection = document.getElementById('waitlist-form');
-                    if (waitlistSection) {
-                      waitlistSection.scrollIntoView({ behavior: 'smooth' });
+                    const pathname = window.location.pathname;
+                    if (pathname === '/') {
+                      // Already on home page, just scroll
+                      const waitlistSection = document.getElementById('waitlist-form');
+                      if (waitlistSection) {
+                        waitlistSection.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    } else {
+                      // Navigate to home page with hash
+                      window.location.href = '/#waitlist-form';
                     }
                   }}
-                  className="text-gray-600 hover:text-brand-violet transition-colors text-sm text-left"
+                  className="text-gray-600 hover:text-brand-violet transition-colors text-sm text-left cursor-pointer"
                   style={{ fontFamily: 'var(--font-body)' }}
                 >
                   Join Waitlist
