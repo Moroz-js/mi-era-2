@@ -34,5 +34,4 @@ services:
 
 volumes:
   postgres_data:
-    name: mi_era_postgres_data
     driver: local
