@@ -130,7 +130,7 @@ export default async function BlogPage() {
                       </div>
 
                       {/* Content */}
-                      <div className="p-6">
+                      <div className="p-6 flex flex-col h-full">
                         <div className="flex items-center gap-2 mb-3">
                           <span 
                             className="text-sm text-gray-500"
@@ -153,7 +153,7 @@ export default async function BlogPage() {
 
                         {post.excerpt && (
                           <p 
-                            className="text-gray-600 text-sm mb-4 leading-relaxed"
+                            className="text-gray-600 text-sm mb-4 leading-relaxed flex-grow"
                             style={{ fontFamily: 'var(--font-body)' }}
                           >
                             {post.excerpt}
@@ -161,7 +161,7 @@ export default async function BlogPage() {
                         )}
 
                         <span 
-                          className="text-brand-violet font-semibold text-sm hover:text-brand-yellow transition-colors"
+                          className="text-brand-violet font-semibold text-sm hover:text-brand-yellow transition-colors mt-auto"
                           style={{ fontFamily: 'var(--font-body)' }}
                         >
                           Read More →
