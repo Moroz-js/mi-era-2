@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 interface BenefitCard {
   icon: React.ReactNode;
@@ -36,12 +37,23 @@ export function Benefits({ heading, subheading, benefits }: BenefitsProps) {
           {/* Subheading */}
           {subheading && (
             <p 
-              className="text-lg md:text-xl text-center mb-12 text-brand-white max-w-3xl mx-auto"
+              className="text-lg md:text-xl text-center mb-8 text-brand-white max-w-3xl mx-auto"
               style={{ fontFamily: 'var(--font-body)' }}
             >
               {subheading}
             </p>
           )}
+
+          {/* Link to About page */}
+          <div className="text-center mb-12">
+            <Link
+              href="/about"
+              className="inline-flex items-center text-brand-yellow hover:text-brand-white transition-colors text-base md:text-lg font-semibold"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              For parents and guardians: our story and approach to safety →
+            </Link>
+          </div>
 
           {/* Benefit Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

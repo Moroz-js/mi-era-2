@@ -52,7 +52,7 @@ export default function Home() {
 
   // Benefits section content
   const benefitsData = {
-    heading: "Why Mi-Era works",
+    heading: "Why Mi-Era exists",
     subheading: "Because it's designed for how you actually think and feel, not how productivity apps think you should.",
     benefits: [
       {
@@ -250,20 +250,6 @@ export default function Home() {
         highlighted: true,
         ctaText: "Start free trial",
       },
-      {
-        name: "Family",
-        price: "$9.99",
-        period: "/month",
-        features: [
-          "Everything in Plus",
-          "Up to 4 family members",
-          "Parent dashboard (optional)",
-          "Shared family goals",
-          "Family insights",
-        ],
-        highlighted: false,
-        ctaText: "Start free trial",
-      },
     ],
   };
 
@@ -278,28 +264,36 @@ export default function Home() {
     heading: "Questions? We've got answers",
     items: [
       {
-        question: "What age is mi-Era designed for?",
-        answer: "Mi-Era is built specifically for teenagers aged 13-18. We designed every feature with your needs in mind—from the way the AI talks to you, to how we handle your privacy. If you're in this age range and looking for a supportive way to manage your tasks and emotions, mi-Era is for you.",
+        question: "What is Mi-Era, in simple terms?",
+        answer: "Mi-Era is a teen-first focus and self-regulation training app. It helps teens learn how to start work, stay focused, and finish tasks on their own. Instead of managing assignments for them, Mi-Era builds focus like a skill through short sessions, guided support, and reflection.",
       },
       {
-        question: "How do you keep my data secure and private?",
-        answer: "Your privacy is non-negotiable. Everything you write—your tasks, journal entries, and conversations with the AI—is encrypted and stored securely. We never share your personal information with anyone. Your parents can't see your private entries unless you choose to share them. We're GDPR compliant and take data protection seriously because we know how important your privacy is.",
+        question: "Who is Mi-Era for?",
+        answer: "Mi-Era is designed for teens ages 13–18. It's especially helpful for students who procrastinate, get distracted easily, feel overwhelmed by schoolwork, or struggle to follow through — even when they care and want to do well.",
       },
       {
-        question: "How does the AI actually work? Is it just a chatbot?",
-        answer: "Our AI is designed to understand you, not just respond to keywords. It learns your patterns—when you're most productive, what helps you feel better, and how to support you without being pushy. It's not here to lecture you or sound like a textbook. Think of it as a supportive friend who's always available, remembers what you've talked about, and actually gets what you're going through.",
+        question: "How is Mi-Era different from a homework planner or productivity app?",
+        answer: "Most productivity apps organize tasks. Mi-Era trains the ability to focus. It builds self-regulation through short, repeatable focus sessions, structured focus support, and reflection. Over time, teens develop cognitive stamina, confidence, and ownership — not just better to-do lists.",
       },
       {
-        question: "Can I use mi-Era for school work?",
-        answer: "Absolutely. Many students use mi-Era to manage homework, track assignments, and prepare for exams. The app helps you break down big projects into manageable steps and reminds you of deadlines without overwhelming you. Some teachers even recommend it to their students. Just remember—mi-Era is a tool to support your learning, not to do the work for you.",
+        question: "How does the AI in Mi-Era work?",
+        answer: "Mi-Era's AI provides guided, structured focus support — not open-ended chat or answers. It helps teens move through a proven focus loop: decide what to work on, prepare, focus, reflect, and share progress. The support adapts based on effort and patterns over time. The teen stays in control at all times.",
       },
       {
-        question: "What if I miss a day or fall behind?",
-        answer: "That's completely okay. Life happens, and mi-Era is built around that reality. There's no guilt-tripping, no red alerts, no shame. When you come back, the app helps you figure out what matters most right now and how to move forward. Every day is a fresh start, and we're here to support you wherever you are.",
+        question: "Does Mi-Era help with ADHD or focus challenges?",
+        answer: "Mi-Era is not a medical treatment, but it is designed to support teens who struggle with attention, distraction, or motivation. Its short sessions, clear structure, and non-judgmental support are especially helpful for teens who don't do well with rigid planners or pressure-based systems.",
       },
       {
-        question: "Do my parents have access to what I write?",
-        answer: "No. Your private journal entries and AI conversations are yours alone. If you're using the Family plan, parents can see shared family goals and general progress stats (like how many tasks you completed), but they can't read your private thoughts or messages. You're in control of what you share.",
+        question: "What can parents see, and how does privacy work?",
+        answer: "Mi-Era is privacy-first. Parents can see high-level indicators of effort and consistency, but not private reflections or emotional content. The goal is to support independence while giving parents peace of mind — without increasing conflict or surveillance.",
+      },
+      {
+        question: "What if my teen misses days or loses motivation?",
+        answer: "Nothing bad happens. Mi-Era is built around progress, not punishment. Teens can always restart with a new focus session. The system encourages consistency but never penalizes setbacks, helping teens rebuild momentum instead of giving up.",
+      },
+      {
+        question: "Is Mi-Era worth paying for?",
+        answer: "Mi-Era is best for families who want their teen to build lifelong focus and self-regulation skills — not just finish tonight's homework. It's an investment in confidence, independence, and mental endurance that extends beyond school.",
       },
     ],
   };

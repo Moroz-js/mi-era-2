@@ -6,7 +6,7 @@ export default function NotFound() {
     <div className="min-h-screen bg-brand-white flex flex-col">
       <Header />
       
-      <main className="flex-grow flex items-center justify-center px-4">
+      <main className="flex-grow flex items-center justify-center px-4 py-16 md:py-24">
         <div className="text-center max-w-2xl mx-auto">
           <h1 
             className="text-8xl md:text-9xl font-bold text-brand-violet mb-4"

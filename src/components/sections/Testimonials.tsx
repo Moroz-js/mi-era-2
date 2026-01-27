@@ -37,36 +37,21 @@ export function Testimonials({ heading, testimonials }: TestimonialsProps) {
               key={index}
               className="rounded-2xl p-6 md:p-8 flex flex-col"
             >
-              {/* Avatar and Author Info */}
-              <div className="flex items-center gap-4 mb-4">
-                {/* Avatar */}
-                <div className="w-16 h-16 rounded-full bg-gray-300 flex-shrink-0 overflow-hidden">
-                  {testimonial.avatar ? (
-                    <img 
-                      src={testimonial.avatar} 
-                      alt={testimonial.author}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400" />
-                  )}
-                </div>
-                
+              {/* Author Info */}
+              <div className="mb-4">
                 {/* Name and Role */}
-                <div>
-                  <p 
-                    className="font-bold text-brand-black text-lg"
-                    style={{ fontFamily: 'var(--font-body)' }}
-                  >
-                    {testimonial.author}
-                  </p>
-                  <p 
-                    className="text-sm text-gray-600"
-                    style={{ fontFamily: 'var(--font-body)' }}
-                  >
-                    {testimonial.role}
-                  </p>
-                </div>
+                <p 
+                  className="font-bold text-brand-black text-lg"
+                  style={{ fontFamily: 'var(--font-body)' }}
+                >
+                  {testimonial.author}
+                </p>
+                <p 
+                  className="text-sm text-gray-600"
+                  style={{ fontFamily: 'var(--font-body)' }}
+                >
+                  {testimonial.role}
+                </p>
               </div>
               
               {/* Quote */}
