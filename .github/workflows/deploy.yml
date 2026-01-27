@@ -56,12 +56,17 @@ jobs:
             DOCKER_BUILDKIT=1 docker compose build --no-cache --pull --progress=plain app
 
             # 5) Fast switch: recreate app container (short downtime only here)
+            # This will apply new volume mounts from docker-compose.yml
             docker compose up -d --force-recreate app
 
             # small pause for app boot
             sleep 2
 
-            # 6) Migrations/seed
+            # 6) Ensure uploads directory exists with proper permissions
+            docker compose exec -T app mkdir -p /app/public/uploads
+            docker compose exec -T app chmod -R 755 /app/public/uploads
+
+            # 7) Migrations/seed
             # NOTE: better to NOT swallow migration errors in prod
             docker compose exec -T app npm run db:push || docker compose exec -T app npx drizzle-kit push
             docker compose exec -T app npm run db:seed || true
