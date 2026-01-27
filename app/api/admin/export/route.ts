@@ -10,18 +10,16 @@ export async function GET(request: NextRequest) {
       .select({
         email: waitlistEmails.email,
         createdAt: waitlistEmails.createdAt,
-        confirmed: waitlistEmails.confirmed,
       })
       .from(waitlistEmails)
       .orderBy(desc(waitlistEmails.createdAt));
 
     // Generate CSV content
-    const csvHeaders = 'email,signup_date,confirmed\n';
+    const csvHeaders = 'email,signup_date\n';
     const csvRows = emails
       .map((row) => {
         const signupDate = row.createdAt.toISOString();
-        const confirmed = row.confirmed ? 'true' : 'false';
-        return `${row.email},${signupDate},${confirmed}`;
+        return `${row.email},${signupDate}`;
       })
       .join('\n');
 

@@ -52,14 +52,14 @@ export async function POST(request: NextRequest) {
       .where(eq(waitlistEmails.email, normalizedEmail))
       .limit(1);
 
-    // Handle duplicate emails gracefully (idempotent)
+    // Handle duplicate emails - return distinct response
     if (existingEmail.length > 0) {
       return NextResponse.json<WaitlistResponse>(
         {
-          success: true,
+          success: false,
           message: 'You are already on the waitlist!',
         },
-        { status: 200 }
+        { status: 409 }
       );
     }
 

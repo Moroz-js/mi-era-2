@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 
 export function Footer() {
@@ -62,9 +61,9 @@ export function Footer() {
               <li>
                 <button 
                   onClick={() => {
-                    const ctaSection = document.querySelector('section');
-                    if (ctaSection) {
-                      ctaSection.scrollIntoView({ behavior: 'smooth' });
+                    const waitlistSection = document.getElementById('waitlist');
+                    if (waitlistSection) {
+                      waitlistSection.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
                   className="text-gray-600 hover:text-brand-violet transition-colors text-sm text-left"

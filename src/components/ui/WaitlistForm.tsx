@@ -62,6 +62,15 @@ export function WaitlistForm({ onSuccess, onError }: WaitlistFormProps) {
       const data = await response.json();
 
       if (!response.ok) {
+        // Handle duplicate email (409) with info message instead of error
+        if (response.status === 409) {
+          setState(prev => ({
+            ...prev,
+            isSubmitting: false,
+            error: data.message || 'You are already on the waitlist!',
+          }));
+          return;
+        }
         throw new Error(data.error || 'Something went wrong. Please try again.');
       }
 

@@ -98,13 +98,7 @@ export default function AdminBlogPage() {
 
       {posts.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-600 mb-4">No blog posts yet</p>
-          <button
-            onClick={() => router.push('/admin/blog/new')}
-            className="bg-brand-yellow hover:bg-brand-violet text-black px-6 py-2 rounded-lg font-medium transition-colors"
-          >
-            Create Your First Post
-          </button>
+          <p className="text-gray-600">No blog posts yet</p>
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
