@@ -107,10 +107,10 @@ export default async function BlogPage() {
                     className="block"
                   >
                     <article 
-                      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 h-full cursor-pointer"
+                      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 h-full flex flex-col cursor-pointer"
                     >
                       {/* Image */}
-                      <div className="relative h-48 bg-gradient-to-br from-purple-400 to-purple-600">
+                      <div className="relative h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex-shrink-0">
                         {post.featuredImage ? (
                           <img 
                             src={post.featuredImage} 
@@ -130,7 +130,7 @@ export default async function BlogPage() {
                       </div>
 
                       {/* Content */}
-                      <div className="p-6 flex flex-col h-full">
+                      <div className="p-6 flex flex-col flex-grow">
                         <div className="flex items-center gap-2 mb-3">
                           <span 
                             className="text-sm text-gray-500"
@@ -153,7 +153,7 @@ export default async function BlogPage() {
 
                         {post.excerpt && (
                           <p 
-                            className="text-gray-600 text-sm mb-4 leading-relaxed flex-grow"
+                            className="text-gray-600 text-sm mb-4 leading-relaxed"
                             style={{ fontFamily: 'var(--font-body)' }}
                           >
                             {post.excerpt}
