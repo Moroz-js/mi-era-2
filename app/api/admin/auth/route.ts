@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateSessionToken, createSession } from '@/lib/admin/session';
 
-// Hardcoded admin credentials
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'mi-era-admin';
+// Admin credentials from environment variables
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'changeme';
 
 export async function POST(request: NextRequest) {
   console.log('[AUTH] Login request received');

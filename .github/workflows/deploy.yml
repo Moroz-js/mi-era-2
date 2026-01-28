@@ -10,8 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy via SSH (key) - Docker Compose (clean frontend)
+      - name: Deploy via SSH (Docker Compose)
         uses: appleboy/ssh-action@v1.0.0
+        env:
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          DOMAIN: ${{ secrets.DOMAIN }}
+
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+          GOOGLE_ANALYTICS_ID: ${{ secrets.GOOGLE_ANALYTICS_ID }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -21,56 +39,85 @@ jobs:
           script_stop: true
           script: |
             set -euo pipefail
-            cd /var/www/mi-era
+
+            PROJECT_DIR="/var/www/${PROJECT_NAME}"
+
+            echo "▶ Deploying ${PROJECT_NAME}"
+            cd "${PROJECT_DIR}"
 
             git fetch --all
             git reset --hard origin/main
 
-            # 1) Ensure DB is up (no downtime)
+            echo "▶ Generating .env from GitHub Secrets"
+            umask 077
+            cat > .env <<EOF
+            # Project
+            PROJECT_NAME=${PROJECT_NAME}
+
+            # Runtime
+            NODE_ENV=production
+
+            # URLs
+            BASE_URL=https://${DOMAIN}
+            NEXT_PUBLIC_BASE_URL=https://${DOMAIN}
+
+            # Database (Docker internal host: postgres)
+            POSTGRES_USER=${POSTGRES_USER}
+            POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            POSTGRES_DB=${POSTGRES_DB}
+            DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+
+            # Email (SMTP)
+            SMTP_HOST=${SMTP_HOST}
+            SMTP_PORT=${SMTP_PORT}
+            SMTP_USER=${SMTP_USER}
+            SMTP_PASSWORD=${SMTP_PASSWORD}
+            SMTP_FROM=${SMTP_FROM}
+
+            # Admin
+            ADMIN_USERNAME=${ADMIN_USERNAME}
+            ADMIN_PASSWORD=${ADMIN_PASSWORD}
+
+            # Analytics
+            GOOGLE_ANALYTICS_ID=${GOOGLE_ANALYTICS_ID}
+            EOF
+            chmod 600 .env
+
+            echo "▶ Starting Postgres"
             docker compose up -d postgres
 
-            # 2) Wait for Postgres + auth check (no downtime)
+            echo "▶ Waiting for Postgres"
             for i in {1..30}; do
-              if docker compose exec -T postgres sh -lc 'PGPASSWORD="$POSTGRES_PASSWORD" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "select 1" >/dev/null'; then
-                echo "Postgres auth OK"
+              if docker compose exec -T postgres sh -lc \
+                'PGPASSWORD="$POSTGRES_PASSWORD" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "select 1"' \
+                >/dev/null; then
+                echo "✓ Postgres ready"
                 break
               fi
-              echo "Waiting for Postgres auth..."
               sleep 2
             done
 
-            # 3) IMPORTANT: normalize postgres password BEFORE app rebuild/switch
-            # (since you observe it "breaks" after deploy)
-            docker compose exec -T postgres psql -U postgres -d postgres -c "ALTER USER postgres WITH PASSWORD 'postgres';"
-
-            # re-check auth after reset
-            docker compose exec -T postgres sh -lc 'PGPASSWORD="$POSTGRES_PASSWORD" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "select 1" >/dev/null'
-
-            # 4) Build new app image while old app keeps running (no downtime)
+            echo "▶ Building app image"
             rm -rf .next .turbo node_modules || true
-
-            # (optional) don’t nuke all build cache each deploy – it slows deploys; but keeps as you had
-            docker builder prune -af || true
             docker buildx prune -af || true
 
-            DOCKER_BUILDKIT=1 docker compose build --no-cache --pull --progress=plain app
+            DOCKER_BUILDKIT=1 docker compose build --pull app
 
-            # 5) Fast switch: recreate app container (short downtime only here)
-            # This will apply new volume mounts from docker-compose.yml
+            echo "▶ Recreating app container"
             docker compose up -d --force-recreate app
 
-            # small pause for app boot
             sleep 2
 
-            # 6) Ensure uploads directory exists with proper permissions
+            echo "▶ Ensuring uploads directory"
             docker compose exec -T app mkdir -p /app/public/uploads
             docker compose exec -T app chmod -R 755 /app/public/uploads
 
-            # 7) Migrations/seed
-            # NOTE: better to NOT swallow migration errors in prod
-            docker compose exec -T app npm run db:push || docker compose exec -T app npx drizzle-kit push
+            echo "▶ Running migrations"
+            docker compose exec -T app npm run db:push || \
+              docker compose exec -T app npx drizzle-kit push
+
+            echo "▶ Running seed (optional)"
             docker compose exec -T app npm run db:seed || true
 
             docker compose ps
-            docker compose logs --tail=80 app
-
+            docker compose logs --tail=60 app

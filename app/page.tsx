@@ -309,8 +309,8 @@ export default function Home() {
             '@context': 'https://schema.org',
             '@type': 'Organization',
             name: 'mi-Era',
-            url: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
-            logo: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/assets/logo.png`,
+            url: process.env.BASE_URL || 'http://localhost:3000',
+            logo: `${process.env.BASE_URL || 'http://localhost:3000'}/assets/logo.png`,
             description: 'A mobile task-tracking app with AI assistant designed for teenagers aged 13-18. Own your era with no guilt, no pressure - just growth.',
             contactPoint: {
               '@type': 'ContactPoint',
@@ -328,13 +328,13 @@ export default function Home() {
             '@context': 'https://schema.org',
             '@type': 'WebSite',
             name: 'mi-Era',
-            url: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+            url: process.env.BASE_URL || 'http://localhost:3000',
             description: 'A reliable space where teens can grow',
             potentialAction: {
               '@type': 'SearchAction',
               target: {
                 '@type': 'EntryPoint',
-                urlTemplate: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/blog?search={search_term_string}`,
+                urlTemplate: `${process.env.BASE_URL || 'http://localhost:3000'}/blog?search={search_term_string}`,
               },
               'query-input': 'required name=search_term_string',
             },

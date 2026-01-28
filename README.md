@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mi-Era
 
-## Getting Started
+Production deployment with **Docker Compose** and **GitHub Actions**.  
+Secrets are stored only in **GitHub Secrets**; `.env` is generated on deploy.
 
-First, run the development server:
+---
+
+## Stack
+
+- Next.js (app)
+- PostgreSQL 16 (database)
+- Docker + Docker Compose
+- Nginx + Let's Encrypt (Certbot)
+- GitHub Actions for deployment
+
+---
+
+## Server layout
+
+Project is deployed to:
+
+/var/www/<PROJECT_NAME>
+
+
+Example:
+
+
+/var/www/mi-era
+
+
+---
+
+## Docker services
+
+### `app`
+- Next.js production container
+- Runs on `127.0.0.1:3000` (Nginx proxies to it)
+
+### `postgres`
+- PostgreSQL 16 in Docker
+- Data stored in a persistent Docker volume
+- Not exposed publicly
+
+---
+
+## Uploads / media
+
+Uploads are persisted via a Docker volume mounted to:
+
+/app/public/uploads
+
+
+---
+
+## Environment / Secrets
+
+### Important
+- `.env` is **not committed** to the repository
+- `.env` is generated automatically on every deploy by **GitHub Actions**
+- Values come from **GitHub Secrets**
+
+### Required GitHub Secrets
+
+#### Project
+- `PROJECT_NAME` (e.g. `mi-era`)
+- `DOMAIN` (e.g. `mi-era.org`)
+
+#### Database
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `POSTGRES_DB`
+
+`DATABASE_URL` is generated automatically as:
+
+postgresql://POSTGRES_USER:POSTGRES_PASSWORD@postgres:5432/POSTGRES_DB
+
+
+#### SMTP (email)
+- `SMTP_HOST` (e.g. `smtp.gmail.com`)
+- `SMTP_PORT` (e.g. `587`)
+- `SMTP_USER`
+- `SMTP_PASSWORD`
+- `SMTP_FROM`
+
+#### Admin
+- `ADMIN_USERNAME`
+- `ADMIN_PASSWORD`
+
+#### Analytics (optional)
+- `GOOGLE_ANALYTICS_ID`
+
+#### SSH (deployment)
+- `SSH_HOST`
+- `SSH_USER`
+- `SSH_PORT`
+- `SSH_KEY`
+- `SSH_PASSPHRASE` (only if the SSH key is encrypted)
+
+---
+
+## Deployment
+
+Deploy runs on every push to `main`:
+
+1. SSH into the server
+2. Pull latest code
+3. Generate `.env` from GitHub Secrets
+4. Start Postgres (if not running)
+5. Build and recreate the `app` container
+6. Run migrations + optional seed
+
+---
+
+## Useful commands (on server)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+cd /var/www/mi-era
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+docker compose ps
+docker compose logs -f app
+docker compose logs -f postgres

@@ -1,6 +1,6 @@
 #!/bin/bash
-# Mi-Era Server Setup (Docker-first)
-# Ubuntu 22.04/24.04, Debian 11/12
+# Server Setup (Docker-first, .env managed by GitHub Actions)
+# Supported: Ubuntu 22.04/24.04, Debian 11/12
 
 set -euo pipefail
 
@@ -9,19 +9,13 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-DEFAULT_REPO_URL="https://github.com/Moroz-js/mi-era-2.git"
-DEFAULT_DOMAIN="mi-era.org"
-DEFAULT_LE_EMAIL="vm@xmethod.de"
-DEFAULT_SMTP_USER="no-reply@mi-era.org"
-DEFAULT_GTM_ID="GTM-5PKVTR4Q"
-
 echo "================================"
-echo "Mi-Era Server Setup (Docker)"
+echo "Server Setup (Docker)"
 echo "================================"
 echo ""
 
 if [ "${EUID:-0}" -ne 0 ]; then
-  echo "❌ Run as root: sudo bash server-setup.sh"
+  echo -e "${RED}❌ Please run as root:${NC} sudo bash server-setup.sh"
   exit 1
 fi
 
@@ -29,34 +23,87 @@ have_cmd() { command -v "$1" >/dev/null 2>&1; }
 is_ubuntu() { [ -f /etc/os-release ] && grep -qi 'ubuntu' /etc/os-release; }
 is_debian() { [ -f /etc/os-release ] && grep -qi 'debian' /etc/os-release; }
 
-echo -e "${YELLOW}⚠️  Скрипт настроит Docker + Nginx + SSL и запустит проект через docker compose.${NC}"
-read -p "Продолжить? (y/n): " CONTINUE
-if [ "$CONTINUE" != "y" ]; then
-  echo "Отменено."
+if ! is_ubuntu && ! is_debian; then
+  echo -e "${RED}❌ Unsupported OS. Please use Ubuntu or Debian.${NC}"
+  exit 1
+fi
+
+echo -e "${YELLOW}This script will:${NC}"
+echo "  - Update the system"
+echo "  - Install Docker + Docker Compose plugin"
+echo "  - Install and configure Nginx + Certbot (Let's Encrypt)"
+echo "  - Clone/update the project repo into /var/www/<project-name>"
+echo "  - Configure Nginx reverse proxy to the app on 127.0.0.1:3000"
+echo "  - Obtain SSL certificates for your domain"
+echo ""
+echo -e "${YELLOW}Note:${NC} .env is NOT generated here. It will be created/updated by GitHub Actions from Secrets."
+echo ""
+
+read -p "Continue? (y/n): " CONTINUE
+if [ "${CONTINUE}" != "y" ]; then
+  echo "Cancelled."
   exit 0
 fi
 echo ""
 
-echo -e "${YELLOW}📦 Обновление системы...${NC}"
+# --- Ask inputs (no defaults) ---
+read -p "Project name (used for /var/www/<name> and nginx site name): " PROJECT_NAME
+if [ -z "${PROJECT_NAME}" ]; then
+  echo -e "${RED}❌ Project name is required.${NC}"
+  exit 1
+fi
+
+PROJECT_DIR="/var/www/${PROJECT_NAME}"
+NGINX_SITE_NAME="${PROJECT_NAME}"
+NGINX_SITE_PATH="/etc/nginx/sites-available/${NGINX_SITE_NAME}"
+ENV_PATH="${PROJECT_DIR}/.env"
+
+read -p "Git repo URL (HTTPS): " REPO_URL
+if [ -z "${REPO_URL}" ]; then
+  echo -e "${RED}❌ Repo URL is required.${NC}"
+  exit 1
+fi
+
+read -p "Domain (e.g. mi-era.org): " DOMAIN
+if [ -z "${DOMAIN}" ]; then
+  echo -e "${RED}❌ Domain is required.${NC}"
+  exit 1
+fi
+
+read -p "Let's Encrypt email: " LE_EMAIL
+if [ -z "${LE_EMAIL}" ]; then
+  echo -e "${RED}❌ Let's Encrypt email is required.${NC}"
+  exit 1
+fi
+
+echo ""
+echo -e "${YELLOW}Selected configuration:${NC}"
+echo "  Project name: ${PROJECT_NAME}"
+echo "  Project dir : ${PROJECT_DIR}"
+echo "  Domain      : ${DOMAIN}"
+echo "  Nginx site  : ${NGINX_SITE_NAME}"
+echo ""
+
+echo -e "${YELLOW}📦 Updating system packages...${NC}"
 apt update
 apt upgrade -y --fix-missing || true
-echo -e "${GREEN}✓ Система обновлена${NC}"
+echo -e "${GREEN}✓ System updated${NC}"
 echo ""
 
-echo -e "${YELLOW}📦 Установка базовых утилит...${NC}"
-apt install -y curl wget git ufw ca-certificates gnupg lsb-release
-echo -e "${GREEN}✓ Базовые утилиты установлены${NC}"
+echo -e "${YELLOW}📦 Installing base utilities...${NC}"
+apt install -y curl wget git ufw ca-certificates gnupg lsb-release openssl
+echo -e "${GREEN}✓ Base utilities installed${NC}"
 echo ""
 
-echo -e "${YELLOW}🔥 Настройка Firewall...${NC}"
+echo -e "${YELLOW}🔥 Configuring firewall (UFW)...${NC}"
 ufw allow OpenSSH || true
 ufw allow 80/tcp || true
 ufw allow 443/tcp || true
 echo "y" | ufw enable >/dev/null 2>&1 || true
-echo -e "${GREEN}✓ Firewall настроен${NC}"
+echo -e "${GREEN}✓ Firewall configured${NC}"
 echo ""
 
-echo -e "${YELLOW}🐳 Установка Docker...${NC}"
+echo -e "${YELLOW}🐳 Installing Docker...${NC}"
 if ! have_cmd docker; then
   mkdir -p /etc/apt/keyrings
 
@@ -64,186 +111,95 @@ if ! have_cmd docker; then
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
       > /etc/apt/sources.list.d/docker.list
-  elif is_debian; then
+  else
     curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" \
       > /etc/apt/sources.list.d/docker.list
-  else
-    echo -e "${RED}❌ Unsupported OS. Need Ubuntu/Debian.${NC}"
-    exit 1
   fi
 
   apt update
   apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 else
-  echo -e "${YELLOW}⚠ Docker уже установлен, пропускаю установку.${NC}"
+  echo -e "${YELLOW}⚠ Docker is already installed. Skipping.${NC}"
 fi
 
 systemctl enable --now docker
 DOCKER_VERSION="$(docker --version | awk '{print $3}' | sed 's/,//')"
 COMPOSE_VERSION="$(docker compose version | awk '{print $4}')"
-echo -e "${GREEN}✓ Docker ${DOCKER_VERSION} установлен${NC}"
-echo -e "${GREEN}✓ Docker Compose ${COMPOSE_VERSION} установлен${NC}"
+echo -e "${GREEN}✓ Docker ${DOCKER_VERSION} installed${NC}"
+echo -e "${GREEN}✓ Docker Compose ${COMPOSE_VERSION} installed${NC}"
 echo ""
 
-echo -e "${YELLOW}🌐 Установка Nginx...${NC}"
+echo -e "${YELLOW}🌐 Installing Nginx...${NC}"
 apt-get install -y nginx
 systemctl enable --now nginx
 NGINX_VERSION="$(nginx -v 2>&1 | awk -F'/' '{print $2}')"
-echo -e "${GREEN}✓ Nginx ${NGINX_VERSION} установлен${NC}"
+echo -e "${GREEN}✓ Nginx ${NGINX_VERSION} installed${NC}"
 echo ""
 
-echo -e "${YELLOW}🔒 Установка Certbot...${NC}"
+echo -e "${YELLOW}🔒 Installing Certbot...${NC}"
 apt-get install -y certbot python3-certbot-nginx
-echo -e "${GREEN}✓ Certbot установлен${NC}"
+echo -e "${GREEN}✓ Certbot installed${NC}"
 echo ""
 
-# Освободить 5432 под docker postgres (compose публикует 5432:5432)
+# If system PostgreSQL exists, stop it to avoid port conflicts in case you bind 5432 locally
 if systemctl list-unit-files | grep -q '^postgresql\.service'; then
   if systemctl is-active --quiet postgresql; then
-    echo -e "${YELLOW}⚠ Обнаружен системный PostgreSQL. Останавливаю, чтобы освободить 5432 для Docker...${NC}"
+    echo -e "${YELLOW}⚠ System PostgreSQL detected. Stopping it to avoid port conflicts...${NC}"
     systemctl disable --now postgresql || true
-    echo -e "${GREEN}✓ system PostgreSQL остановлен${NC}"
+    echo -e "${GREEN}✓ System PostgreSQL stopped${NC}"
     echo ""
   fi
 fi
 
-echo "================================"
-echo -e "${YELLOW}📦 Параметры деплоя${NC}"
-echo "================================"
-echo ""
-
-read -p "Repo URL [${DEFAULT_REPO_URL}]: " REPO_URL
-REPO_URL="${REPO_URL:-$DEFAULT_REPO_URL}"
-
-read -p "Домен [${DEFAULT_DOMAIN}]: " DOMAIN
-DOMAIN="${DOMAIN:-$DEFAULT_DOMAIN}"
-
-read -p "Email для Let's Encrypt [${DEFAULT_LE_EMAIL}]: " LE_EMAIL
-LE_EMAIL="${LE_EMAIL:-$DEFAULT_LE_EMAIL}"
-
-read -p "SMTP user [${DEFAULT_SMTP_USER}]: " SMTP_USER
-SMTP_USER="${SMTP_USER:-$DEFAULT_SMTP_USER}"
-
-read -sp "SMTP App Password (обязательно для отправки писем): " SMTP_PASSWORD
-echo ""
-
-read -p "GTM/Analytics ID [${DEFAULT_GTM_ID}]: " GTM_ID
-GTM_ID="${GTM_ID:-$DEFAULT_GTM_ID}"
-
-PROJECT_DIR="/var/www/mi-era"
+echo -e "${YELLOW}📁 Preparing project directory...${NC}"
 mkdir -p /var/www
 
-echo -e "${YELLOW}📥 Клонирование/обновление репозитория...${NC}"
-if [ -d "$PROJECT_DIR/.git" ]; then
-  cd "$PROJECT_DIR"
-  git pull
+echo -e "${YELLOW}📥 Cloning/updating repository...${NC}"
+if [ -d "${PROJECT_DIR}/.git" ]; then
+  cd "${PROJECT_DIR}"
+  git fetch --all
+  git reset --hard origin/main || true
+  git pull || true
 else
-  if [ -d "$PROJECT_DIR" ]; then
-    echo -e "${YELLOW}⚠ Директория $PROJECT_DIR существует, но не git repo.${NC}"
-    read -p "Удалить и клонировать заново? (y/n): " RECLONE
-    if [ "$RECLONE" = "y" ]; then
-      rm -rf "$PROJECT_DIR"
-      git clone "$REPO_URL" "$PROJECT_DIR"
+  if [ -d "${PROJECT_DIR}" ] && [ "$(ls -A "${PROJECT_DIR}" 2>/dev/null | wc -l)" -gt 0 ]; then
+    echo -e "${YELLOW}⚠ ${PROJECT_DIR} exists and is not a git repo (or not empty).${NC}"
+    read -p "Delete it and re-clone? (y/n): " RECLONE
+    if [ "${RECLONE}" = "y" ]; then
+      rm -rf "${PROJECT_DIR}"
+      git clone "${REPO_URL}" "${PROJECT_DIR}"
     else
-      echo -e "${RED}❌ Нужен git репозиторий в $PROJECT_DIR.${NC}"
+      echo -e "${RED}❌ Cannot proceed without a clean git repo in ${PROJECT_DIR}.${NC}"
       exit 1
     fi
   else
-    git clone "$REPO_URL" "$PROJECT_DIR"
+    rm -rf "${PROJECT_DIR}" || true
+    git clone "${REPO_URL}" "${PROJECT_DIR}"
   fi
 fi
-echo -e "${GREEN}✓ Репозиторий готов${NC}"
+echo -e "${GREEN}✓ Repository is ready${NC}"
 echo ""
 
-cd "$PROJECT_DIR"
+cd "${PROJECT_DIR}"
 
-if [ ! -f docker-compose.yml ] && [ ! -f compose.yml ]; then
-  echo -e "${RED}❌ Не найден docker-compose.yml (или compose.yml) в $PROJECT_DIR.${NC}"
+# Detect compose file
+if [ -f docker-compose.yml ]; then
+  COMPOSE_FILE="docker-compose.yml"
+elif [ -f compose.yml ]; then
+  COMPOSE_FILE="compose.yml"
+else
+  echo -e "${RED}❌ No docker-compose.yml (or compose.yml) found in ${PROJECT_DIR}.${NC}"
   exit 1
 fi
 
-echo -e "${YELLOW}⚙️  Генерация .env (Docker-friendly)...${NC}"
-cat > .env <<ENVFILE
-# Database (Docker internal host: postgres)
-DATABASE_URL=postgresql://postgres:postgres@postgres:5432/mi_era
-
-# Email Configuration (Gmail)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=${SMTP_USER}
-SMTP_PASSWORD=${SMTP_PASSWORD}
-SMTP_FROM=${SMTP_USER}
-
-# Application Configuration
-BASE_URL=https://${DOMAIN}
-NEXT_PUBLIC_BASE_URL=https://${DOMAIN}
-NODE_ENV=production
-
-# Analytics / Tag Manager
-GOOGLE_ANALYTICS_ID=${GTM_ID}
-ENVFILE
-chmod 600 .env || true
-echo -e "${GREEN}✓ .env создан${NC}"
-echo ""
-
-echo -e "${YELLOW}🐳 Поднимаю PostgreSQL...${NC}"
-docker compose up -d postgres
-
-echo -e "${YELLOW}⏳ Жду готовности PostgreSQL...${NC}"
-for i in {1..30}; do
-  if docker compose ps postgres | grep -q "Up"; then
-    # если есть healthcheck — подождём healthy
-    if docker inspect -f '{{.State.Health.Status}}' mi-era-postgres 2>/dev/null | grep -q "healthy"; then
-      break
-    fi
-    # если healthcheck нет — достаточно, что Up
-    if ! docker inspect -f '{{.State.Health.Status}}' mi-era-postgres >/dev/null 2>&1; then
-      break
-    fi
-  fi
-  sleep 2
-done
-
-if ! docker compose ps postgres | grep -q "Up"; then
-  echo -e "${RED}❌ Postgres контейнер не поднялся.${NC}"
-  docker compose logs --no-color postgres | tail -200
-  exit 1
-fi
-echo -e "${GREEN}✓ PostgreSQL запущен${NC}"
-echo ""
-
-echo -e "${YELLOW}🐳 Сборка и запуск app...${NC}"
-docker compose up -d --build app
-echo -e "${GREEN}✓ App контейнер поднят${NC}"
-echo ""
-
-echo -e "${YELLOW}🗄️  Миграции drizzle внутри контейнера app...${NC}"
-if docker compose exec -T app npm run | grep -q "db:push"; then
-  docker compose exec -T app npm run db:push
-else
-  docker compose exec -T app npx drizzle-kit push
-fi
-echo -e "${GREEN}✓ Миграции применены${NC}"
-echo ""
-
-echo -e "${YELLOW}🌱 Seed (если есть)...${NC}"
-if docker compose exec -T app npm run | grep -q "db:seed"; then
-  docker compose exec -T app npm run db:seed
-  echo -e "${GREEN}✓ Seed выполнен${NC}"
-else
-  echo -e "${YELLOW}⚠ Скрипт db:seed не найден — пропускаю.${NC}"
-fi
-echo ""
-
-echo -e "${YELLOW}🌐 Настройка Nginx...${NC}"
-cat > /etc/nginx/sites-available/mi-era <<EOF
+echo -e "${YELLOW}🌐 Configuring Nginx reverse proxy (HTTP)...${NC}"
+cat > "${NGINX_SITE_PATH}" <<EOF
 server {
     listen 80;
     server_name ${DOMAIN} www.${DOMAIN};
 
-    # Allow larger file uploads (for images in admin)
-    client_max_body_size 10M;
+    # Increase upload limit (adjust as needed)
+    client_max_body_size 50M;
 
     location / {
         proxy_pass http://127.0.0.1:3000;
@@ -261,30 +217,85 @@ server {
 }
 EOF
 
-ln -sf /etc/nginx/sites-available/mi-era /etc/nginx/sites-enabled/mi-era
+ln -sf "${NGINX_SITE_PATH}" "/etc/nginx/sites-enabled/${NGINX_SITE_NAME}"
 rm -f /etc/nginx/sites-enabled/default || true
+
 nginx -t
 systemctl reload nginx
-echo -e "${GREEN}✓ Nginx настроен${NC}"
+echo -e "${GREEN}✓ Nginx configured${NC}"
 echo ""
 
-echo -e "${YELLOW}🔒 Получаю SSL сертификат...${NC}"
+echo -e "${YELLOW}🔒 Obtaining SSL certificate via Certbot...${NC}"
 certbot --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" --non-interactive --agree-tos -m "${LE_EMAIL}" || {
-  echo -e "${RED}❌ Certbot не смог выписать сертификат. Проверь DNS и доступность 80/443.${NC}"
+  echo -e "${RED}❌ Certbot failed. Check DNS A records and that ports 80/443 are reachable.${NC}"
   exit 1
 }
 
 (crontab -l 2>/dev/null; echo "0 3 * * * certbot renew --quiet") | crontab -
-echo -e "${GREEN}✓ SSL включён + автообновление настроено${NC}"
+echo -e "${GREEN}✓ SSL enabled + auto-renew configured${NC}"
 echo ""
 
-CONFIG_FILE="/root/mi-era-config.txt"
-cat > "$CONFIG_FILE" <<EOF
-Mi-Era Server Configuration
-==========================
+# --- Optional: start services only if .env exists ---
+echo -e "${YELLOW}🐳 Docker Compose bootstrap (optional)...${NC}"
+if [ -f "${ENV_PATH}" ]; then
+  echo -e "${GREEN}✓ Found ${ENV_PATH}. Starting services...${NC}"
+  docker compose up -d postgres || true
+
+  echo -e "${YELLOW}⏳ Waiting for Postgres health...${NC}"
+  for i in {1..30}; do
+    if docker compose ps postgres | grep -q "Up"; then
+      PG_CID="$(docker compose ps -q postgres 2>/dev/null || true)"
+      if [ -n "${PG_CID}" ]; then
+        PG_HEALTH="$(docker inspect -f '{{.State.Health.Status}}' "${PG_CID}" 2>/dev/null || true)"
+        if [ "${PG_HEALTH}" = "healthy" ] || [ -z "${PG_HEALTH}" ]; then
+          break
+        fi
+      else
+        break
+      fi
+    fi
+    sleep 2
+  done
+
+  docker compose up -d --build app
+
+  echo -e "${YELLOW}🗄️ Running migrations (Drizzle) inside app...${NC}"
+  if docker compose exec -T app npm run | grep -q "db:push"; then
+    docker compose exec -T app npm run db:push
+  else
+    docker compose exec -T app npx drizzle-kit push
+  fi
+  echo -e "${GREEN}✓ Migrations applied${NC}"
+
+  echo -e "${YELLOW}🌱 Running seed (if available)...${NC}"
+  if docker compose exec -T app npm run | grep -q "db:seed"; then
+    docker compose exec -T app npm run db:seed || true
+    echo -e "${GREEN}✓ Seed done${NC}"
+  else
+    echo -e "${YELLOW}⚠ No db:seed script found. Skipping.${NC}"
+  fi
+
+  echo ""
+  docker compose ps
+  docker compose logs --tail=40 app || true
+else
+  echo -e "${YELLOW}⚠ ${ENV_PATH} not found.${NC}"
+  echo "Server setup is complete, but the application was NOT started."
+  echo ""
+  echo "Next step:"
+  echo "  - Run your GitHub Actions deploy (it will create/update .env from Secrets)"
+  echo "  - Or manually create ${ENV_PATH} and run:"
+  echo "      cd ${PROJECT_DIR} && docker compose up -d --build"
+fi
+
+CONFIG_FILE="/root/${PROJECT_NAME}-config.txt"
+cat > "${CONFIG_FILE}" <<EOF
+Server Configuration
+====================
 Created: $(date)
 
 Project:
+  Name: ${PROJECT_NAME}
   Dir: ${PROJECT_DIR}
   Repo: ${REPO_URL}
 
@@ -297,30 +308,32 @@ Docker:
 
 Nginx:
   Version: ${NGINX_VERSION}
+  Site: ${NGINX_SITE_PATH}
 
 Notes:
-- App & Postgres run via docker compose.
+- .env is managed by GitHub Actions (from Secrets), not by this script.
 - Logs:
     cd ${PROJECT_DIR}
     docker compose logs -f app
     docker compose logs -f postgres
-- Migrations/Seed:
-    docker compose exec app npm run db:push
-    docker compose exec app npm run db:seed
 EOF
-chmod 600 "$CONFIG_FILE" || true
+chmod 600 "${CONFIG_FILE}" || true
 
+echo ""
 echo "================================"
-echo -e "${GREEN}✅ Готово!${NC}"
+echo -e "${GREEN}✅ Done!${NC}"
 echo "================================"
 echo ""
-echo "Сайт:"
+echo "Website:"
 echo "  https://${DOMAIN}"
 echo "  https://www.${DOMAIN}"
 echo ""
-echo "Проверка:"
-echo "  curl -I http://127.0.0.1:3000"
+echo "Project directory:"
+echo "  ${PROJECT_DIR}"
+echo ""
+echo "Useful checks:"
+echo "  curl -I http://127.0.0.1:3000   (if app is running)"
 echo "  curl -I https://${DOMAIN}"
 echo ""
-echo -e "${YELLOW}📄 Конфиг: ${CONFIG_FILE}${NC}"
+echo -e "${YELLOW}Config saved to:${NC} ${CONFIG_FILE}"
 echo ""
