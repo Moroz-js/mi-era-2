@@ -83,15 +83,15 @@ jobs:
             docker compose up -d postgres
 
             echo "▶ Waiting for Postgres"
-            for i in {1..30}; do
-              if docker compose exec -T postgres sh -lc \
-                'PGPASSWORD="$POSTGRES_PASSWORD" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "select 1"' \
-                >/dev/null; then
+            for i in {1..60}; do
+              if docker compose exec -T postgres pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" >/dev/null 2>&1; then
                 echo "✓ Postgres ready"
                 break
               fi
               sleep 2
             done
+            docker compose exec -T postgres pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
+
 
             echo "▶ Building app image"
             rm -rf .next .turbo node_modules || true
