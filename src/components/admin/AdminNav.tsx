@@ -27,7 +27,7 @@ export default function AdminNav() {
   };
 
   return (
-    <nav className="w-64 bg-white border-r border-gray-200 min-h-screen p-6">
+    <nav className="w-64 bg-white border-r border-gray-200 min-h-screen p-6 flex flex-col">
       <ul className="space-y-2">
         {navItems.map((item) => (
           <li key={item.href}>
@@ -45,6 +45,18 @@ export default function AdminNav() {
           </li>
         ))}
       </ul>
+      
+      <div className="mt-auto pt-6 border-t border-gray-200">
+        <a
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+        >
+          <span className="text-xl">↗</span>
+          <span>View Live Site</span>
+        </a>
+      </div>
     </nav>
   );
 }
