@@ -15,7 +15,6 @@ jobs:
         env:
           PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
           DOMAIN: ${{ secrets.DOMAIN }}
-
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
