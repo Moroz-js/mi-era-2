@@ -18,16 +18,13 @@ jobs:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           SMTP_FROM: ${{ secrets.SMTP_FROM }}
-
           ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-
           GOOGLE_ANALYTICS_ID: ${{ secrets.GOOGLE_ANALYTICS_ID }}
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -35,9 +32,10 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script_stop: true
+          envs: PROJECT_NAME,DOMAIN,POSTGRES_USER,POSTGRES_PASSWORD,POSTGRES_DB,SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASSWORD,SMTP_FROM,ADMIN_USERNAME,ADMIN_PASSWORD,GOOGLE_ANALYTICS_ID
           script: |
             set -euo pipefail
-
+            echo "DEBUG PROJECT_NAME=${PROJECT_NAME}"
             PROJECT_DIR="/var/www/${PROJECT_NAME}"
 
             echo "▶ Deploying ${PROJECT_NAME}"
