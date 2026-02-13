@@ -16,8 +16,6 @@ const sectionLabels: Record<string, string> = {
   key_features: 'Key Features',
   how_it_works: 'How It Works',
   testimonials: 'Testimonials',
-  pricing: 'Pricing (Not Editable)',
-  download_cta: 'Download CTA (Not Editable)',
   faq: 'FAQ',
 };
 
@@ -43,18 +41,6 @@ export default function EditHomepageSectionPage() {
         return <TestimonialsForm />;
       case 'faq':
         return <FAQForm />;
-      case 'pricing':
-      case 'download_cta':
-        return (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-            <h3 className="text-lg font-semibold text-yellow-900 mb-2">
-              {sectionLabels[key]}
-            </h3>
-            <p className="text-yellow-800">
-              This section is not yet editable through the admin panel. Please contact the development team if changes are needed.
-            </p>
-          </div>
-        );
       default:
         return (
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
