@@ -111,9 +111,8 @@ export async function POST(request: NextRequest) {
 
     await writeFile(filePath, buffer);
 
-    // Generate public URL
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const publicUrl = `${baseUrl}/uploads/${uniqueFilename}`;
+    // Return relative URL (works in both dev and production)
+    const publicUrl = `/uploads/${uniqueFilename}`;
 
     return NextResponse.json({
       success: true,
