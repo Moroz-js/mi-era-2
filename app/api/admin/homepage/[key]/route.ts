@@ -11,10 +11,10 @@ import { cookies } from 'next/headers';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { key: string } }
+  { params }: { params: Promise<{ key: string }> }
 ) {
   try {
-    const { key } = params;
+    const { key } = await params;
     
     const [section] = await db
       .select()
@@ -51,7 +51,7 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { key: string } }
+  { params }: { params: Promise<{ key: string }> }
 ) {
   try {
     // Check authentication
@@ -73,7 +73,7 @@ export async function PUT(
       );
     }
 
-    const { key } = params;
+    const { key } = await params;
     const body = await request.json();
     const { content } = body;
 
