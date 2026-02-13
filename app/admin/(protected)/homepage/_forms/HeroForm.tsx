@@ -44,13 +44,22 @@ export function HeroForm() {
       const res = await fetch('/api/admin/homepage/hero');
       if (res.ok) {
         const result = await res.json();
-        setData(result.section.content);
+        const heroData = result.section.content;
+        // Ensure only 3 screenshots (trim old data if it has 4)
+        setData({
+          ...heroData,
+          screenshots: heroData.screenshots.slice(0, 3),
+        });
       } else if (res.status === 404) {
         // Load defaults from fallback API
         const defaultsRes = await fetch('/api/admin/homepage');
         const defaultsData = await defaultsRes.json();
         if (defaultsData.success && defaultsData.sections.hero) {
-          setData(defaultsData.sections.hero);
+          const heroData = defaultsData.sections.hero;
+          setData({
+            ...heroData,
+            screenshots: heroData.screenshots.slice(0, 3),
+          });
         }
       }
     } catch (error) {
@@ -70,10 +79,16 @@ export function HeroForm() {
 
     setSaving(true);
     try {
+      // Ensure only 3 screenshots are saved
+      const dataToSave = {
+        ...data,
+        screenshots: data.screenshots.slice(0, 3),
+      };
+
       const res = await fetch('/api/admin/homepage/hero', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: data }),
+        body: JSON.stringify({ content: dataToSave }),
       });
 
       const result = await res.json();
