@@ -67,10 +67,10 @@ export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
           </div>
 
           {/* Right Column - App Screenshots */}
-          <div className="relative h-[500px] md:h-[600px]">
+          <div className="relative h-[600px] md:h-[700px]">
             {/* Screenshot 1 - Bottom Left */}
             <div 
-              className="absolute bottom-0 left-0 w-[45%] h-[55%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
+              className="absolute bottom-0 left-0 w-[45%] h-[60%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
             >
               {screenshots[0]?.src ? (
                 <img
@@ -85,7 +85,7 @@ export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
 
             {/* Screenshot 2 - Top Center */}
             <div 
-              className="absolute top-0 left-[25%] w-[50%] h-[65%] rounded-2xl shadow-lg border-4 border-white overflow-hidden z-10"
+              className="absolute top-0 left-[25%] w-[50%] h-[70%] rounded-2xl shadow-lg border-4 border-white overflow-hidden z-10"
             >
               {screenshots[1]?.src ? (
                 <img
@@ -100,7 +100,7 @@ export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
 
             {/* Screenshot 3 - Right */}
             <div 
-              className="absolute top-[15%] right-0 w-[48%] h-[70%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
+              className="absolute top-[15%] right-0 w-[48%] h-[75%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
             >
               {screenshots[2]?.src ? (
                 <img
