@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, timestamp, boolean, text, integer } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, timestamp, boolean, text, integer, jsonb } from 'drizzle-orm/pg-core';
 
 export const waitlistEmails = pgTable('waitlist_emails', {
   id: serial('id').primaryKey(),
@@ -72,4 +72,12 @@ export const adminSessions = pgTable('admin_sessions', {
   sessionToken: varchar('session_token', { length: 255 }).notNull().unique(),
   expiresAt: timestamp('expires_at').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// Homepage Sections table - editable content for homepage
+export const homepageSections = pgTable('homepage_sections', {
+  id: serial('id').primaryKey(),
+  sectionKey: varchar('section_key', { length: 50 }).notNull().unique(),
+  content: jsonb('content').notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

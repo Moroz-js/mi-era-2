@@ -110,8 +110,8 @@ jobs:
             docker compose exec -T app chmod -R 755 /app/public/uploads
 
             echo "▶ Running migrations"
-            docker compose exec -T app npm run db:push || \
-              docker compose exec -T app npx drizzle-kit push
+            docker compose exec -T app npm run db:migrate || \
+              docker compose exec -T app npx drizzle-kit migrate
 
             echo "▶ Running seed (optional)"
             docker compose exec -T app npm run db:seed || true

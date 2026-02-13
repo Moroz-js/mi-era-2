@@ -12,7 +12,8 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:test-migration": "tsx scripts/test-migration.ts",
-    "db:seed": "tsx scripts/seed-static-pages.ts"
+    "db:seed": "tsx scripts/seed-static-pages.ts && tsx scripts/seed-homepage.ts",
+    "db:seed-homepage": "tsx scripts/seed-homepage.ts"
   },
   "dependencies": {
     "@tiptap/extension-image": "^3.17.1",
