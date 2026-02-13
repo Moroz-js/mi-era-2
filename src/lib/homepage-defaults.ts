@@ -7,10 +7,9 @@ export const defaultHomepageData = {
     subheading: "Track your tasks, understand your emotions, and build habits that actually work for you. No pressure, no judgment—just support.",
     ctaText: "Get early access",
     screenshots: [
-      { src: "/placeholders/task-list.png", alt: "Task List Screenshot", aspectRatio: "9/16" },
-      { src: "/placeholders/ai-chat.png", alt: "AI Chat Screenshot", aspectRatio: "9/16" },
-      { src: "/placeholders/emotional-journal.png", alt: "Emotional Journal Screenshot", aspectRatio: "9/16" },
-      { src: "/placeholders/progress.png", alt: "Progress Screenshot", aspectRatio: "9/16" },
+      { src: "", alt: "Screenshot 1", aspectRatio: "9/16" },
+      { src: "", alt: "Screenshot 2", aspectRatio: "9/16" },
+      { src: "", alt: "Screenshot 3", aspectRatio: "9/16" },
     ],
   },
 
@@ -90,7 +89,7 @@ export const defaultHomepageData = {
         title: "App is adaptive to your behavior",
         description: "The more you use Mi-Era, the better it understands your patterns. It learns when you work best, what motivates you, and how to support you without being pushy.",
         screenshot: {
-          src: "/placeholders/adaptive-behavior.png",
+          src: "",
           alt: "Adaptive Behavior Screenshot",
           frameColor: "#57BD2D",
         },
@@ -101,7 +100,7 @@ export const defaultHomepageData = {
         title: "Emotional Journal",
         description: "Track how you're feeling alongside your tasks. See patterns, understand what affects your mood, and learn what helps you feel better.",
         screenshot: {
-          src: "/placeholders/emotional-journal-feature.png",
+          src: "",
           alt: "Emotional Journal Screenshot",
           frameColor: "#3755F0",
         },
@@ -112,7 +111,7 @@ export const defaultHomepageData = {
         title: "Progress and Rewards",
         description: "Celebrate every step forward. See your streaks, track your wins, and feel good about what you've accomplished—no matter how small.",
         screenshot: {
-          src: "/placeholders/progress-rewards.png",
+          src: "",
           alt: "Progress and Rewards Screenshot",
           frameColor: "#FE2C2B",
         },

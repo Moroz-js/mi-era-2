@@ -176,7 +176,7 @@ export function StatisticsForm() {
           ))}
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+        <div className="sticky bottom-0 bg-white border-t border-gray-200 pt-4 mt-6 -mx-6 px-6 -mb-6 pb-6 flex items-center justify-end gap-3">
           <button
             type="button"
             onClick={loadData}

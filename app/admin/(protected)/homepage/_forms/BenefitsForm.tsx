@@ -193,7 +193,7 @@ export function BenefitsForm() {
         />
 
         <div className="border-t border-gray-200 pt-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="sticky top-0 bg-white z-10 flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
             <h3 className="text-lg font-semibold text-gray-900">Benefits</h3>
             <button
               type="button"
@@ -278,7 +278,7 @@ export function BenefitsForm() {
           )}
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+        <div className="sticky bottom-0 bg-white border-t border-gray-200 pt-4 mt-6 -mx-6 px-6 -mb-6 pb-6 flex items-center justify-end gap-3">
           <button
             type="button"
             onClick={loadData}
