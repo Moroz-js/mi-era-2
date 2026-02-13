@@ -40,7 +40,7 @@ export default async function HomepagePage() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">
                   {section.label}
                 </h3>
-                <p className="text-sm text-gray-600">{section.description}</p>
+               
               </div>
             </div>
             <div className="mt-4 flex items-center text-brand-violet text-sm font-medium">
