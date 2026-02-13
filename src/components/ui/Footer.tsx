@@ -20,6 +20,36 @@ export function Footer() {
             >
               A reliable, calm, guilt-free digital space where teens learn to build structure, focus, and confidence.
             </p>
+            {/* Social Media Links */}
+            <div className="flex items-center gap-4 mt-4">
+              <a
+                href="https://www.instagram.com/mi_era.ai/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="hover:opacity-70 transition-opacity"
+              >
+                <img src="/assets/instagram.svg" alt="Instagram" className="w-6 h-6" />
+              </a>
+              <a
+                href="https://www.youtube.com/@mi-era.ai.founder"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                className="hover:opacity-70 transition-opacity"
+              >
+                <img src="/assets/youtube.svg" alt="YouTube" className="w-6 h-6" />
+              </a>
+              <a
+                href="https://www.tiktok.com/@mi_era.ai?lang=en"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok"
+                className="hover:opacity-70 transition-opacity"
+              >
+                <img src="/assets/tiktok.svg" alt="TikTok" className="w-6 h-6" />
+              </a>
+            </div>
           </div>
 
           {/* Quick Links */}
@@ -114,19 +144,33 @@ export function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="text-center pt-8 border-t border-gray-200">
-          <p 
-            className="text-gray-600 text-sm mb-2"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            Own your era
-          </p>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-8 border-t border-gray-200">
           <p 
             className="text-gray-500 text-xs"
             style={{ fontFamily: 'var(--font-body)' }}
           >
             © {new Date().getFullYear()} Mi-Era. All rights reserved.
           </p>
+          <p 
+            className="text-gray-600 text-sm"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            Own your era
+          </p>
+          <a
+            href="https://xmethod.de"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <span 
+              className="text-xs"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              Designed & Developed by
+            </span>
+            <img src="/assets/xmethod.svg" alt="Xmethod" className="h-4 w-auto" />
+          </a>
         </div>
       </div>
     </footer>

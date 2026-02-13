@@ -9,7 +9,7 @@ interface SitemapEntry {
   priority: number;
 }
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
 /**
  * Generate sitemap entries for all public pages and published blog posts

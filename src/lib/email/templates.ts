@@ -127,7 +127,7 @@ export const emailTemplate = `
  * @returns Object containing template variables
  */
 export function getEmailVariables(email: string) {
-  const siteUrl = 'https://mi-era.org';
+  const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mi-era.org';
   const logoUrl = `${siteUrl}/assets/logo.png`;
   
   return {

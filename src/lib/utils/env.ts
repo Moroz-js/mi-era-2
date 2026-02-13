@@ -10,7 +10,7 @@ interface EnvConfig {
   SMTP_USER: string;
   SMTP_PASSWORD: string;
   SMTP_FROM: string;
-  BASE_URL: string;
+  NEXT_PUBLIC_BASE_URL: string;
   NODE_ENV: string;
 }
 
@@ -26,7 +26,7 @@ export function validateEnv(): EnvConfig {
     'SMTP_USER',
     'SMTP_PASSWORD',
     'SMTP_FROM',
-    'BASE_URL',
+    'NEXT_PUBLIC_BASE_URL',
   ];
 
   const missing: string[] = [];
@@ -52,7 +52,7 @@ export function validateEnv(): EnvConfig {
     SMTP_USER: process.env.SMTP_USER!,
     SMTP_PASSWORD: process.env.SMTP_PASSWORD!,
     SMTP_FROM: process.env.SMTP_FROM!,
-    BASE_URL: process.env.BASE_URL!,
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL!,
     NODE_ENV: process.env.NODE_ENV || 'development',
   };
 }
