@@ -37,7 +37,7 @@ export function ImageUploadField({ label, value, onChange, required = false }: I
             alt={label} 
             className="max-h-48 rounded mb-3 mx-auto"
           />
-          <div className="text-sm text-gray-600 mb-2 truncate">
+          <div className="text-sm text-gray-600 mb-2 break-all">
             {value}
           </div>
           <div className="flex gap-2">

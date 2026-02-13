@@ -1,6 +1,4 @@
 import React from 'react';
-import { StarIcon } from '../icons/StarIcon';
-import { AbstractVisual } from '../ui/AbstractVisual';
 
 interface Feature {
   icon: React.ReactNode;
@@ -73,12 +71,13 @@ export function KeyFeatures({ heading, subheading, features }: KeyFeaturesProps)
                 </p>
               </div>
 
-              {/* Abstract Visual */}
+              {/* Screenshot */}
               <div className="w-3/5 md:flex-1 flex justify-center">
                 <div className="rounded-lg overflow-hidden w-full max-w-sm md:max-w-md aspect-[9/16] shadow-lg">
-                  <AbstractVisual 
-                    variant={index === 0 ? 'adaptive' : index === 1 ? 'emotional' : 'growth'} 
-                    className="w-full h-full"
+                  <img
+                    src={feature.screenshot.src}
+                    alt={feature.screenshot.alt}
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>

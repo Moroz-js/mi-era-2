@@ -281,17 +281,6 @@ export function KeyFeaturesForm() {
                         placeholder="Describe the screenshot"
                         required
                       />
-
-                      <div className="mt-2 flex items-center gap-2">
-                        <span className="text-sm text-gray-600">Frame Color:</span>
-                        <div 
-                          className="w-8 h-8 rounded border border-gray-300"
-                          style={{ backgroundColor: feature.screenshot.frameColor }}
-                        ></div>
-                        <span className="text-sm font-mono text-gray-500">
-                          {feature.screenshot.frameColor}
-                        </span>
-                      </div>
                     </div>
                   </div>
                 </div>
