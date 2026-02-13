@@ -5,6 +5,7 @@ import { Button } from '../ui/Button';
 import { AbstractVisual } from '../ui/AbstractVisual';
 
 interface HeroProps {
+  tagline: string;
   heading: string;
   subheading: string;
   ctaText: string;
@@ -15,7 +16,7 @@ interface HeroProps {
   }>;
 }
 
-export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
+export function Hero({ tagline, heading, subheading, ctaText, screenshots }: HeroProps) {
   const handleCTAClick = () => {
     const waitlistForm = document.getElementById('waitlist-form');
     if (waitlistForm) {
@@ -36,7 +37,7 @@ export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
                 className="text-sm md:text-base font-medium text-brand-black"
                 style={{ fontFamily: 'var(--font-body)' }}
               >
-                Made for teens, by people who get it
+                {tagline}
               </p>
             </div>
 
@@ -70,7 +71,7 @@ export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
           <div className="relative h-[600px] md:h-[700px]">
             {/* Screenshot 1 - Bottom Left */}
             <div 
-              className="absolute bottom-0 left-0 w-[45%] h-[60%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
+              className="absolute bottom-0 left-0 w-[45%] h-[100%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
             >
               {screenshots[0]?.src ? (
                 <img
@@ -85,7 +86,7 @@ export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
 
             {/* Screenshot 2 - Top Center */}
             <div 
-              className="absolute top-0 left-[25%] w-[50%] h-[70%] rounded-2xl shadow-lg border-4 border-white overflow-hidden z-10"
+              className="absolute top-0 left-[25%] w-[50%] h-[100%] rounded-2xl shadow-lg border-4 border-white overflow-hidden z-10"
             >
               {screenshots[1]?.src ? (
                 <img
@@ -100,7 +101,7 @@ export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
 
             {/* Screenshot 3 - Right */}
             <div 
-              className="absolute top-[15%] right-0 w-[48%] h-[75%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
+              className="absolute top-[15%] right-0 w-[48%] h-[100%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
             >
               {screenshots[2]?.src ? (
                 <img

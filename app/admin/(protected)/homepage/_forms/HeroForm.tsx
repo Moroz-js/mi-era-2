@@ -7,6 +7,7 @@ import { ImageUploadField } from '../_components/ImageUploadField';
 import { useToast } from '@/components/admin/ToastContext';
 
 interface HeroData {
+  tagline: string;
   heading: string;
   subheading: string;
   ctaText: string;
@@ -18,6 +19,7 @@ interface HeroData {
 }
 
 const defaultHero: HeroData = {
+  tagline: '',
   heading: '',
   subheading: '',
   ctaText: '',
@@ -72,7 +74,7 @@ export function HeroForm() {
 
   const handleSave = async () => {
     // Validation
-    if (!data.heading || !data.subheading || !data.ctaText) {
+    if (!data.tagline || !data.heading || !data.subheading || !data.ctaText) {
       showToast('Please fill in all required fields', 'error');
       return;
     }
@@ -126,6 +128,14 @@ export function HeroForm() {
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Hero Section</h2>
 
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+        <FormInput
+          label="Tagline"
+          value={data.tagline}
+          onChange={(val) => setData({ ...data, tagline: val })}
+          placeholder="Made for teens, by people who get it"
+          required
+        />
+
         <FormInput
           label="Heading"
           value={data.heading}

@@ -3,6 +3,7 @@
 
 export const defaultHomepageData = {
   hero: {
+    tagline: "Made for teens, by people who get it",
     heading: "A reliable space where teens can grow",
     subheading: "Track your tasks, understand your emotions, and build habits that actually work for you. No pressure, no judgment—just support.",
     ctaText: "Get early access",
