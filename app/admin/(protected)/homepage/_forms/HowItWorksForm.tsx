@@ -152,7 +152,7 @@ export function HowItWorksForm() {
         />
 
         <div className="border-t border-gray-200 pt-6">
-          <div className="sticky top-0 bg-white z-10 flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+          <div className="sticky top-0 py-2 bg-white z-10 flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
             <h3 className="text-lg font-semibold text-gray-900">Steps</h3>
             <button
               type="button"
