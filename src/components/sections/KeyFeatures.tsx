@@ -1,4 +1,5 @@
 import React from 'react';
+import { AbstractVisual } from '../ui/AbstractVisual';
 
 interface Feature {
   icon: React.ReactNode;
@@ -74,11 +75,18 @@ export function KeyFeatures({ heading, subheading, features }: KeyFeaturesProps)
               {/* Screenshot */}
               <div className="w-3/5 md:flex-1 flex justify-center">
                 <div className="rounded-lg overflow-hidden w-full max-w-sm md:max-w-md aspect-[9/16] shadow-lg">
-                  <img
-                    src={feature.screenshot.src}
-                    alt={feature.screenshot.alt}
-                    className="w-full h-full object-cover"
-                  />
+                  {feature.screenshot.src ? (
+                    <img
+                      src={feature.screenshot.src}
+                      alt={feature.screenshot.alt}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <AbstractVisual 
+                      variant={index === 0 ? 'adaptive' : index === 1 ? 'emotional' : 'growth'} 
+                      className="w-full h-full"
+                    />
+                  )}
                 </div>
               </div>
             </div>

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Button } from '../ui/Button';
+import { AbstractVisual } from '../ui/AbstractVisual';
 
 interface HeroProps {
   heading: string;
@@ -71,33 +72,45 @@ export function Hero({ heading, subheading, ctaText, screenshots }: HeroProps) {
             <div 
               className="absolute bottom-0 left-0 w-[45%] h-[55%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
             >
-              <img
-                src={screenshots[0]?.src || '/placeholders/task-list.png'}
-                alt={screenshots[0]?.alt || 'App Screenshot 1'}
-                className="w-full h-full object-cover"
-              />
+              {screenshots[0]?.src ? (
+                <img
+                  src={screenshots[0].src}
+                  alt={screenshots[0].alt}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <AbstractVisual variant="emotional" className="w-full h-full" />
+              )}
             </div>
 
             {/* Screenshot 2 - Top Center */}
             <div 
               className="absolute top-0 left-[25%] w-[50%] h-[65%] rounded-2xl shadow-lg border-4 border-white overflow-hidden z-10"
             >
-              <img
-                src={screenshots[1]?.src || '/placeholders/ai-chat.png'}
-                alt={screenshots[1]?.alt || 'App Screenshot 2'}
-                className="w-full h-full object-cover"
-              />
+              {screenshots[1]?.src ? (
+                <img
+                  src={screenshots[1].src}
+                  alt={screenshots[1].alt}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <AbstractVisual variant="adaptive" className="w-full h-full" />
+              )}
             </div>
 
             {/* Screenshot 3 - Right */}
             <div 
               className="absolute top-[15%] right-0 w-[48%] h-[70%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
             >
-              <img
-                src={screenshots[2]?.src || '/placeholders/emotional-journal.png'}
-                alt={screenshots[2]?.alt || 'App Screenshot 3'}
-                className="w-full h-full object-cover"
-              />
+              {screenshots[2]?.src ? (
+                <img
+                  src={screenshots[2].src}
+                  alt={screenshots[2].alt}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <AbstractVisual variant="balance" className="w-full h-full" />
+              )}
             </div>
           </div>
         </div>
