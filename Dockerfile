@@ -5,6 +5,12 @@ RUN npm ci
 
 FROM node:20-bookworm-slim AS builder
 WORKDIR /app
+
+# Install required system dependencies for @next/swc
+RUN apt-get update && apt-get install -y \
+    libc6 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
