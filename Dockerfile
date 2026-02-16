@@ -1,15 +1,10 @@
-FROM node:20-bookworm-slim AS deps
+FROM node:20-bookworm AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 
-FROM node:20-bookworm-slim AS builder
+FROM node:20-bookworm AS builder
 WORKDIR /app
-
-# Install required system dependencies for @next/swc
-RUN apt-get update && apt-get install -y \
-    libc6 \
-    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -21,7 +16,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build
 
-FROM node:20-bookworm-slim AS runner
+FROM node:20-bookworm AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
