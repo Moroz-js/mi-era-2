@@ -1,7 +1,9 @@
+# syntax=docker/dockerfile:1.7
+
 FROM node:20-bookworm AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm npm ci
 
 FROM node:20-bookworm AS builder
 WORKDIR /app
@@ -14,7 +16,7 @@ ENV DATABASE_URL=${DATABASE_URL}
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN npm run build
+RUN --mount=type=cache,target=/app/.next/cache npm run build
 
 FROM node:20-bookworm AS runner
 WORKDIR /app

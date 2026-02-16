@@ -94,11 +94,10 @@ jobs:
             docker compose exec -T postgres pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
 
 
-            echo "▶ Building app image"
-            rm -rf .next .turbo node_modules || true
-            docker buildx prune -af || true
-
-            DOCKER_BUILDKIT=1 docker compose build --pull app
+            echo "▶ Building app image (reusing Docker cache)"
+            export DOCKER_BUILDKIT=1
+            export COMPOSE_DOCKER_CLI_BUILD=1
+            docker compose build --pull app
 
             echo "▶ Recreating app container"
             docker compose up -d --force-recreate app
