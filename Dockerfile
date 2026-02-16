@@ -2,8 +2,15 @@
 
 FROM node:20-bookworm AS deps
 WORKDIR /app
+ENV npm_config_loglevel=warn \
+    npm_config_fund=false \
+    npm_config_audit=false \
+    npm_config_fetch_retries=5 \
+    npm_config_fetch_retry_mintimeout=20000 \
+    npm_config_fetch_retry_maxtimeout=120000 \
+    npm_config_fetch_timeout=600000
 COPY package.json package-lock.json* ./
-RUN --mount=type=cache,target=/root/.npm npm ci
+RUN --mount=type=cache,target=/root/.npm npm ci --prefer-offline --no-audit --no-fund
 
 FROM node:20-bookworm AS builder
 WORKDIR /app
