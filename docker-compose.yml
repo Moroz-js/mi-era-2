@@ -17,6 +17,7 @@ services:
       retries: 10
 
   app:
+    image: ${APP_IMAGE:-mi-era-app:latest}
     build:
       context: .
       dockerfile: Dockerfile
