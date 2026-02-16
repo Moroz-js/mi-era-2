@@ -74,7 +74,7 @@ export function KeyFeatures({ heading, subheading, features }: KeyFeaturesProps)
 
               {/* Screenshot */}
               <div className="w-3/5 md:flex-1 flex justify-center">
-                <div className="rounded-lg overflow-hidden w-full max-w-xs md:max-w-sm aspect-[9/19.5] shadow-lg">
+                <div className="rounded-lg overflow-hidden w-full max-w-xs md:max-w-xs aspect-[9/19.5] shadow-lg">
                   {feature.screenshot.src ? (
                     <img
                       src={feature.screenshot.src}
