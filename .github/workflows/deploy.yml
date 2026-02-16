@@ -150,7 +150,23 @@ jobs:
             fi
 
             echo "▶ Pulling app image"
-            docker compose pull app
+            export DOCKER_CLIENT_TIMEOUT=300
+            export COMPOSE_HTTP_TIMEOUT=300
+            pulled=0
+            delay=2
+            for i in 1 2 3 4 5; do
+              if docker compose pull app; then
+                pulled=1
+                break
+              fi
+              echo "Pull failed (attempt ${i}/5). Retrying in ${delay}s..."
+              sleep "${delay}"
+              delay=$((delay * 2))
+            done
+            if [ "$pulled" -ne 1 ]; then
+              echo "✗ Failed to pull app image after retries"
+              exit 1
+            fi
 
             echo "▶ Recreating app container"
             docker compose up -d --no-build --force-recreate app
