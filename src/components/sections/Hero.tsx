@@ -68,8 +68,15 @@ export function Hero({ tagline, heading, subheading, ctaText, screenshots }: Her
           </div>
 
           {/* Right Column - App Screenshots */}
-          <div className="relative h-[77vw] md:h-[420px] lg:h-[600px]">
-            {/* Screenshot 1 - Bottom Left */}
+          <div className="
+  relative
+  h-[77vw]
+  md:h-[420px]
+  [@media(min-width:1024px)_and_(max-width:1279px)]:h-[397px]
+  [@media(min-width:1280px)_and_(max-width:1535px)]:h-[497px]
+  2xl:h-[600px]
+">
+          {/* Screenshot 1 - Bottom Left */}
             <div 
               className="absolute top-[10%] left-0 w-[39%] h-[100%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
             >
