@@ -168,6 +168,14 @@ jobs:
               exit 1
             fi
 
+            echo "▶ Running migrations"
+            # Run migrations before starting the app container to avoid runtime errors on missing tables.
+            docker compose run --rm --no-deps app npm run db:migrate || \
+              docker compose run --rm --no-deps app npx drizzle-kit migrate
+
+            echo "▶ Ensuring homepage_sections table exists"
+            docker compose run --rm --no-deps app npx tsx scripts/apply-homepage-migration.ts || true
+
             echo "▶ Recreating app container"
             docker compose up -d --no-build --force-recreate app
 
@@ -176,10 +184,6 @@ jobs:
             echo "▶ Ensuring uploads directory"
             docker compose exec -T app mkdir -p /app/public/uploads
             docker compose exec -T app chmod -R 755 /app/public/uploads
-
-            echo "▶ Running migrations"
-            docker compose exec -T app npm run db:migrate || \
-              docker compose exec -T app npx drizzle-kit migrate
 
             echo "▶ Running seed (optional)"
             docker compose exec -T app npm run db:seed || true
