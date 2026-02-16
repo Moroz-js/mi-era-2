@@ -38,6 +38,7 @@ COPY --from=builder /app/node_modules ./node_modules
 # Copy files needed for drizzle-kit and seed scripts
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=builder /app/src/lib/db ./src/lib/db
+COPY --from=builder /app/src/lib/homepage-defaults.ts ./src/lib/homepage-defaults.ts
 COPY --from=builder /app/scripts ./scripts
 
 EXPOSE 3000
