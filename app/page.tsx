@@ -7,6 +7,9 @@ import { homepageSections } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { defaultHomepageData } from '@/lib/homepage-defaults';
 
+// This page uses DB-backed content; avoid build-time static prerendering in CI image builds.
+export const dynamic = 'force-dynamic';
+
 // Icon mapping for Benefits section
 const iconMap = {
   CheckCircle: CheckCircleIcon,

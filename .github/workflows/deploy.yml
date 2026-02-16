@@ -141,11 +141,12 @@ jobs:
             fi
 
 
-            if [ -n "${GHCR_TOKEN:-}" ] && [ -n "${GHCR_USERNAME:-}" ]; then
+            # NOTE: written to avoid `set -e` quirks with failed test commands in some shells
+            if [ -z "${GHCR_TOKEN:-}" ] || [ -z "${GHCR_USERNAME:-}" ]; then
+              echo "▶ GHCR credentials not provided; trying anonymous pull"
+            else
               echo "▶ Logging in to GHCR"
               echo "${GHCR_TOKEN}" | docker login ghcr.io -u "${GHCR_USERNAME}" --password-stdin
-            else
-              echo "▶ GHCR credentials not provided; trying anonymous pull"
             fi
 
             echo "▶ Pulling app image"
