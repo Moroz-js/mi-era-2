@@ -68,7 +68,7 @@ export function Hero({ tagline, heading, subheading, ctaText, screenshots }: Her
           </div>
 
           {/* Right Column - App Screenshots */}
-          <div className="relative h-[420px] md:h-[600px]">
+          <div className="relative h-[77vw] md:h-[420px] lg:h-[600px]">
             {/* Screenshot 1 - Bottom Left */}
             <div 
               className="absolute top-[10%] left-0 w-[39%] h-[100%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
