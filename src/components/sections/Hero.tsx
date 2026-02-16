@@ -71,7 +71,7 @@ export function Hero({ tagline, heading, subheading, ctaText, screenshots }: Her
           <div className="relative h-[420px] md:h-[600px]">
             {/* Screenshot 1 - Bottom Left */}
             <div 
-              className="absolute bottom-0 left-0 w-[45%] h-[75%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
+              className="absolute top-[10%] left-0 w-[39%] h-[100%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
             >
               {screenshots[0]?.src ? (
                 <img
@@ -86,7 +86,7 @@ export function Hero({ tagline, heading, subheading, ctaText, screenshots }: Her
 
             {/* Screenshot 2 - Top Center */}
             <div 
-              className="absolute top-0 left-[25%] w-[50%] h-[85%] rounded-2xl shadow-lg border-4 border-white overflow-hidden z-10"
+              className="absolute top-0 left-[31%] w-[39%] h-[100%] rounded-2xl shadow-lg border-4 border-white overflow-hidden z-10"
             >
               {screenshots[1]?.src ? (
                 <img
@@ -101,7 +101,7 @@ export function Hero({ tagline, heading, subheading, ctaText, screenshots }: Her
 
             {/* Screenshot 3 - Right */}
             <div 
-              className="absolute top-[7%] right-0 w-[48%] h-[100%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
+              className="absolute top-[7%] right-0 w-[39%] h-[100%] rounded-2xl shadow-lg border-4 border-white overflow-hidden"
             >
               {screenshots[2]?.src ? (
                 <img
