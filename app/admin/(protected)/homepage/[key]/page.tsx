@@ -8,6 +8,7 @@ import { KeyFeaturesForm } from '../_forms/KeyFeaturesForm';
 import { HowItWorksForm } from '../_forms/HowItWorksForm';
 import { TestimonialsForm } from '../_forms/TestimonialsForm';
 import { FAQForm } from '../_forms/FAQForm';
+import { PricingForm } from '../_forms/PricingForm';
 
 const sectionLabels: Record<string, string> = {
   hero: 'Hero Section',
@@ -16,6 +17,7 @@ const sectionLabels: Record<string, string> = {
   key_features: 'Key Features',
   how_it_works: 'How It Works',
   testimonials: 'Testimonials',
+  pricing: 'Pricing',
   faq: 'FAQ',
 };
 
@@ -39,6 +41,8 @@ export default function EditHomepageSectionPage() {
         return <HowItWorksForm />;
       case 'testimonials':
         return <TestimonialsForm />;
+      case 'pricing':
+        return <PricingForm />;
       case 'faq':
         return <FAQForm />;
       default:

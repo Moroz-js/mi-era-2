@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { Button } from '../ui/Button';
 
 interface Step {
   number: number;
@@ -12,12 +15,16 @@ interface HowItWorksProps {
 }
 
 export function HowItWorks({ heading, steps }: HowItWorksProps) {
+  const scrollToWaitlist = () => {
+    document.getElementById('waitlist-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <section className="bg-brand-violet py-16 md:py-24 relative overflow-hidden">
       {/* Decorative stars */}
       <img src="/assets/star-1.png" alt="" className="absolute top-[12%] left-[7%] w-8 h-8 opacity-35" />
       <img src="/assets/star-3.png" alt="" className="absolute top-[25%] right-[9%] w-12 h-12 opacity-35 hidden md:inline" />
-      <img src="/assets/star-2.png" alt="" className="absolute bottom-[15%] left-[4%] opacity-35" style={{ width: '60px', height: '30px' }} />
+      <img src="/assets/star-2.png" alt="" className="hidden md:block absolute bottom-[15%] left-[4%] opacity-35" style={{ width: '60px', height: '30px' }} />
       <img src="/assets/star-1.png" alt="" className="absolute bottom-[8%] right-[11%] w-6 h-6 opacity-35 hidden md:inline" />
       <img src="/assets/star-3.png" alt="" className="absolute top-[50%] right-[3%] w-8 h-8 opacity-35 hidden md:inline" />
       
@@ -70,6 +77,13 @@ export function HowItWorks({ heading, steps }: HowItWorksProps) {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* CTA */}
+        <div className="text-center mt-12">
+          <button onClick={scrollToWaitlist} className="bg-brand-yellow text-brand-black hover:bg-brand-yellow transition-colors duration-200 hover:text-brand-white focus:ring-brand-violet px-6 py-3 text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer">
+              Join the waitlist
+          </button>
         </div>
       </div>
     </section>

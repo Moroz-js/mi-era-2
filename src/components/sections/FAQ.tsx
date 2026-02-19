@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Button } from '../ui/Button';
 
 interface FAQItem {
   question: string;
@@ -17,6 +18,10 @@ export function FAQ({ heading, items }: FAQProps) {
 
   const toggleItem = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
+  };
+
+  const scrollToWaitlist = () => {
+    document.getElementById('waitlist-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
@@ -88,6 +93,13 @@ export function FAQ({ heading, items }: FAQProps) {
                 )}
               </div>
             ))}
+          </div>
+
+          {/* CTA */}
+          <div className="text-center mt-12">
+            <Button variant="primary" size="lg" onClick={scrollToWaitlist}>
+              Join the waitlist
+            </Button>
           </div>
         </div>
       </div>

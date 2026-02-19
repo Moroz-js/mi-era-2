@@ -9,6 +9,7 @@ const sections = [
   { key: 'key_features', label: 'Key Features', description: 'Everything you need', icon: '🚀' },
   { key: 'how_it_works', label: 'How It Works', description: '4-step process', icon: '⚙️' },
   { key: 'testimonials', label: 'Testimonials', description: 'What people are saying', icon: '💬' },
+  { key: 'pricing', label: 'Pricing', description: '3 plans with features & CTA', icon: '💳' },
   { key: 'faq', label: 'FAQ', description: 'Questions & answers', icon: '❓' },
 ];
 

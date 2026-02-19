@@ -18,7 +18,7 @@ export function Testimonials({ heading, testimonials }: TestimonialsProps) {
       {/* Decorative stars */}
       <img src="/assets/star-3.png" alt="" className="absolute top-[5%] md:top-[10%] left-[6%] w-10 h-10 opacity-35 z-0" />
       <img src="/assets/star-1.png" alt="" className="absolute top-[18%] right-[8%] w-6 h-6 opacity-35 hidden md:inline z-0" />
-      <img src="/assets/star-2.png" alt="" className="absolute bottom-[25%] left-[10%] opacity-35 z-0" style={{ width: '60px', height: '30px' }} />
+      <img src="/assets/star-2.png" alt="" className="hidden md:block absolute bottom-[25%] left-[10%] opacity-35 z-0" style={{ width: '60px', height: '30px' }} />
       <img src="/assets/star-3.png" alt="" className="absolute bottom-[12%] right-[5%] w-12 h-12 opacity-35 hidden md:inline z-0" />
       <img src="/assets/star-1.png" alt="" className="absolute top-[55%] left-[4%] w-8 h-8 opacity-35 hidden md:inline z-0" />
       <img src="/assets/star-2.png" alt="" className="absolute top-[70%] right-[7%] opacity-35 hidden md:inline z-0" style={{ width: '60px', height: '30px' }} />
