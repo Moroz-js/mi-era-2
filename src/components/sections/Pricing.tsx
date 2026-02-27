@@ -15,6 +15,7 @@ interface PricingPlan {
   footnote?: string;
   isAddon?: boolean;
   addonLabel?: string;
+  visible?: boolean;
 }
 
 interface PricingProps {
@@ -27,6 +28,9 @@ export function Pricing({ heading, subheading, plans }: PricingProps) {
   const scrollToWaitlist = () => {
     document.getElementById('waitlist-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+
+  const visiblePlans = plans.filter((p) => p.visible !== false);
+  const isTwoCol = visiblePlans.length === 2;
 
   return (
     <section className="py-16 md:py-24 bg-brand-violet relative overflow-hidden">
@@ -56,8 +60,14 @@ export function Pricing({ heading, subheading, plans }: PricingProps) {
           )}
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto items-start">
-          {plans.map((plan, index) => (
+        <div className={`grid grid-cols-1 gap-6 lg:gap-8 mx-auto items-start ${
+          visiblePlans.length === 1
+            ? 'max-w-md'
+            : isTwoCol
+              ? 'md:grid-cols-2 max-w-4xl'
+              : 'md:grid-cols-3 max-w-6xl'
+        }`}>
+          {visiblePlans.map((plan, index) => (
             <div 
               key={index}
               className={`rounded-lg flex flex-col ${
