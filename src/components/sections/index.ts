@@ -4,6 +4,7 @@ export { Benefits } from './Benefits';
 export { KeyFeatures } from './KeyFeatures';
 export { HowItWorks } from './HowItWorks';
 export { Testimonials } from './Testimonials';
+export { EbookBanner } from './EbookBanner';
 export { Pricing } from './Pricing';
 export { DownloadCTA } from './DownloadCTA';
 export { FAQ } from './FAQ';

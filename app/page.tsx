@@ -1,5 +1,5 @@
 import { Header, Footer } from "../src/components/ui";
-import { Hero, Statistics, Benefits, KeyFeatures, HowItWorks, Testimonials, Pricing, DownloadCTA, FAQ } from "../src/components/sections";
+import { Hero, Statistics, Benefits, KeyFeatures, HowItWorks, Testimonials, EbookBanner, Pricing, DownloadCTA, FAQ } from "../src/components/sections";
 import { CheckCircleIcon, ShieldIcon, TargetIcon, HeartIcon, LightbulbIcon, TrophyIcon } from "../src/components/icons/BenefitIcons";
 import { StructuredDataScripts } from "../src/components/StructuredDataScripts";
 import { db } from '@/lib/db/client';
@@ -20,10 +20,38 @@ const iconMap = {
   Heart: HeartIcon,
 };
 
+let isHomepageDbAvailable: boolean | null = null;
+
+async function canUseHomepageDb() {
+  // If DB URL is not configured, skip DB reads completely.
+  if (!process.env.DATABASE_URL) {
+    return false;
+  }
+
+  if (isHomepageDbAvailable !== null) {
+    return isHomepageDbAvailable;
+  }
+
+  try {
+    await db.select({ id: homepageSections.id }).from(homepageSections).limit(1);
+    isHomepageDbAvailable = true;
+  } catch (error) {
+    console.error('Homepage DB is not available, fallback to defaults:', error);
+    isHomepageDbAvailable = false;
+  }
+
+  return isHomepageDbAvailable;
+}
+
 /**
  * Fetch a section's content from DB, fallback to defaults
  */
 async function getSectionContent(key: string) {
+  const useDb = await canUseHomepageDb();
+  if (!useDb) {
+    return (defaultHomepageData as any)[key];
+  }
+
   try {
     const [section] = await db
       .select()
@@ -99,6 +127,9 @@ export default async function Home() {
 
         {/* How It Works Section */}
         <HowItWorks {...howItWorks} />
+
+        {/* Ebook Banner Section */}
+        <EbookBanner />
 
         {/* Testimonials Section */}
         <Testimonials {...testimonials} />
