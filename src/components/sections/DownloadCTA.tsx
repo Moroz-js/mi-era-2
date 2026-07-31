@@ -41,7 +41,7 @@ export function DownloadCTA({ heading, subheading }: DownloadCTAProps) {
               aria-label="Download on the App Store"
             >
               <img 
-                src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" 
+                src="/assets/app-store-badge.svg" 
                 alt="Download on the App Store"
                 className="h-full w-auto"
               />
@@ -53,12 +53,12 @@ export function DownloadCTA({ heading, subheading }: DownloadCTAProps) {
               aria-label="Get it on Google Play"
             >
               <img 
-                src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" 
+                src="/assets/google-play-badge.png" 
                 alt="Get it on Google Play"
                 className="h-full w-auto sm:hidden"
               />
               <img 
-                src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" 
+                src="/assets/google-play-badge.png" 
                 alt="Get it on Google Play"
                 className="h-full w-auto hidden sm:block"
                 style={{ height: '85px' }}
