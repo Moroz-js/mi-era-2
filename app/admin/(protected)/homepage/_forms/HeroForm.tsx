@@ -10,7 +10,6 @@ interface HeroData {
   tagline: string;
   heading: string;
   subheading: string;
-  ctaText: string;
   screenshots: Array<{
     src: string;
     alt: string;
@@ -22,7 +21,6 @@ const defaultHero: HeroData = {
   tagline: '',
   heading: '',
   subheading: '',
-  ctaText: '',
   screenshots: [
     { src: '', alt: '', aspectRatio: '9/16' },
     { src: '', alt: '', aspectRatio: '9/16' },
@@ -47,10 +45,11 @@ export function HeroForm() {
       if (res.ok) {
         const result = await res.json();
         const heroData = result.section.content;
-        // Ensure only 3 screenshots (trim old data if it has 4)
         setData({
-          ...heroData,
-          screenshots: heroData.screenshots.slice(0, 3),
+          tagline: heroData.tagline || '',
+          heading: heroData.heading || '',
+          subheading: heroData.subheading || '',
+          screenshots: (heroData.screenshots || []).slice(0, 3),
         });
       } else if (res.status === 404) {
         // Load defaults from fallback API
@@ -59,8 +58,10 @@ export function HeroForm() {
         if (defaultsData.success && defaultsData.sections.hero) {
           const heroData = defaultsData.sections.hero;
           setData({
-            ...heroData,
-            screenshots: heroData.screenshots.slice(0, 3),
+            tagline: heroData.tagline || '',
+            heading: heroData.heading || '',
+            subheading: heroData.subheading || '',
+            screenshots: (heroData.screenshots || []).slice(0, 3),
           });
         }
       }
@@ -74,7 +75,7 @@ export function HeroForm() {
 
   const handleSave = async () => {
     // Validation
-    if (!data.tagline || !data.heading || !data.subheading || !data.ctaText) {
+    if (!data.tagline || !data.heading || !data.subheading) {
       showToast('Please fill in all required fields', 'error');
       return;
     }
@@ -150,14 +151,6 @@ export function HeroForm() {
           onChange={(val) => setData({ ...data, subheading: val })}
           placeholder="Track your tasks, understand your emotions..."
           rows={3}
-          required
-        />
-
-        <FormInput
-          label="CTA Button Text"
-          value={data.ctaText}
-          onChange={(val) => setData({ ...data, ctaText: val })}
-          placeholder="Get early access"
           required
         />
 

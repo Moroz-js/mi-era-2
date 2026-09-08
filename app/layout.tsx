@@ -6,6 +6,8 @@ import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { generatePageMetadata } from "@/lib/seo/metadata";
 import { generateOrganization, generateWebSite, generateFAQPage } from "@/lib/seo/structured-data";
+import { getSiteCta } from "@/lib/get-site-cta";
+import { SiteCtaProvider } from "@/components/ui/SiteCta";
 
 const specialGothic = localFont({
   src: "../public/fonts/SpecialGothic-Regular.ttf",
@@ -33,11 +35,13 @@ const lexend = localFont({
 
 export const metadata: Metadata = generatePageMetadata('home');
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteCta = await getSiteCta();
+
   return (
     <html lang="en">
       <head>
@@ -53,10 +57,12 @@ gtag('config', 'G-DPB6FYJYYX');`,
         />
       </head>
       <body className={`${specialGothic.variable} ${lexend.variable} antialiased`} suppressHydrationWarning>
-        <AnalyticsProvider />
-        {children}
-        <CookieBanner />
-        <WhatsAppButton />
+        <SiteCtaProvider cta={siteCta}>
+          <AnalyticsProvider />
+          {children}
+          <CookieBanner />
+          <WhatsAppButton />
+        </SiteCtaProvider>
       </body>
     </html>
   );

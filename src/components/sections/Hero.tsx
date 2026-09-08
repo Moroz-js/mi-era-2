@@ -1,15 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Button } from '../ui/Button';
 import { AbstractVisual } from '../ui/AbstractVisual';
-import { WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
+import { SiteCtaButton } from '../ui/SiteCta';
 
 interface HeroProps {
   tagline: string;
   heading: string;
   subheading: string;
-  ctaText: string;
   screenshots: Array<{
     src: string;
     alt: string;
@@ -53,19 +51,7 @@ export function Hero({ tagline, heading, subheading, screenshots }: HeroProps) {
             </p>
 
             {/* CTA Button */}
-            <a
-              href={WEBINAR_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block"
-            >
-              <Button 
-                variant="primary" 
-                size="lg"
-              >
-                {WEBINAR_CTA_TEXT}
-              </Button>
-            </a>
+            <SiteCtaButton variant="primary" size="lg" />
           </div>
 
           {/* Right Column - App Screenshots */}

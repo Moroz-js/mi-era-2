@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { NAV_LINKS, WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
+import { NAV_LINKS } from '@/lib/site-links';
+import { SiteCtaLink } from './SiteCta';
 
 export function Footer() {
   const pathname = usePathname();
@@ -89,15 +90,9 @@ export function Footer() {
                 </li>
               ))}
               <li>
-                <a
-                  href={WEBINAR_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <SiteCtaLink
                   className="text-gray-600 hover:text-brand-violet transition-colors text-sm"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  {WEBINAR_CTA_TEXT}
-                </a>
+                />
               </li>
             </ul>
           </div>

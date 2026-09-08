@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button } from '../ui/Button';
-import { WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
+import { SiteCtaButton } from '../ui/SiteCta';
 
 interface FAQItem {
   question: string;
@@ -94,16 +93,7 @@ export function FAQ({ heading, items }: FAQProps) {
 
           {/* CTA */}
           <div className="text-center mt-12">
-            <a
-              href={WEBINAR_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block"
-            >
-              <Button variant="primary" size="lg">
-                {WEBINAR_CTA_TEXT}
-              </Button>
-            </a>
+            <SiteCtaButton variant="primary" size="lg" />
           </div>
         </div>
       </div>

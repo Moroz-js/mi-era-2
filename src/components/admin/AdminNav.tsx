@@ -14,6 +14,7 @@ const navItems: NavItem[] = [
   { label: 'Blog Posts', href: '/admin/blog', icon: '📝' },
   { label: 'Pages', href: '/admin/pages', icon: '📄' },
   { label: 'Homepage', href: '/admin/homepage', icon: '🏠' },
+  { label: 'Settings', href: '/admin/settings', icon: '⚙️' },
   { label: 'Waitlist', href: '/admin/waitlist', icon: '📧' },
 ];
 

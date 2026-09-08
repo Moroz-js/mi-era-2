@@ -6,7 +6,6 @@ export const defaultHomepageData = {
     tagline: "Made for teens, by people who get it",
     heading: "A reliable space where teens can grow",
     subheading: "Track your tasks, understand your emotions, and build habits that actually work for you. No pressure, no judgment—just support.",
-    ctaText: "Check Out Our Webinars",
     screenshots: [
       { src: "", alt: "Screenshot 1", aspectRatio: "9/16" },
       { src: "", alt: "Screenshot 2", aspectRatio: "9/16" },

@@ -3,7 +3,7 @@ import { getAdminSession } from '@/lib/admin/auth';
 import { redirect } from 'next/navigation';
 
 const sections = [
-  { key: 'hero', label: 'Hero Section', description: 'Main landing section with heading and CTA', icon: '🎯' },
+  { key: 'hero', label: 'Hero Section', description: 'Main landing section with heading', icon: '🎯' },
   { key: 'statistics', label: 'Statistics', description: 'Key metrics and stats', icon: '📊' },
   { key: 'benefits', label: 'Benefits', description: 'Why Mi-Era exists', icon: '✨' },
   { key: 'key_features', label: 'Key Features', description: 'Everything you need', icon: '🚀' },

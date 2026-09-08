@@ -1,13 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Button } from '../ui/Button';
 import {
   APP_STORE_URL,
   GOOGLE_PLAY_URL,
-  WEBINAR_CTA_TEXT,
-  WEBINAR_URL,
 } from '@/lib/site-links';
+import { SiteCtaButton } from '../ui/SiteCta';
 
 interface DownloadCTAProps {
   heading: string;
@@ -36,16 +34,7 @@ export function DownloadCTA({ heading, subheading }: DownloadCTAProps) {
           )}
           
           <div className="mb-12">
-            <a
-              href={WEBINAR_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block"
-            >
-              <Button variant="primary" size="lg">
-                {WEBINAR_CTA_TEXT}
-              </Button>
-            </a>
+            <SiteCtaButton variant="primary" size="lg" />
           </div>
           
           <div className="grid w-full grid-cols-2 items-center gap-2 sm:flex sm:justify-center sm:gap-4">

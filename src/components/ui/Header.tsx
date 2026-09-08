@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button } from './Button';
-import { NAV_LINKS, WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
+import { NAV_LINKS } from '@/lib/site-links';
+import { SiteCtaButton } from './SiteCta';
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -71,18 +71,7 @@ export function Header() {
 
             {/* CTA Button */}
             <div className="hidden md:block">
-              <a
-                href={WEBINAR_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button 
-                  variant="primary" 
-                  size="sm"
-                >
-                  {WEBINAR_CTA_TEXT}
-                </Button>
-              </a>
+              <SiteCtaButton variant="primary" size="sm" />
             </div>
 
             {/* Mobile Menu Button */}
@@ -139,20 +128,13 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          <a
-            href={WEBINAR_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <SiteCtaButton
+            variant="primary"
+            size="md"
+            className="w-full"
+            buttonClassName="w-full"
             onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <Button 
-              variant="primary" 
-              size="md"
-              className="w-full"
-            >
-              {WEBINAR_CTA_TEXT}
-            </Button>
-          </a>
+          />
         </div>
       </nav>
     </>

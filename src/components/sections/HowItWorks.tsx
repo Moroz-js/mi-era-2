@@ -1,5 +1,5 @@
 import React from 'react';
-import { WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
+import { SiteCtaLink } from '../ui/SiteCta';
 
 interface Step {
   number: number;
@@ -75,14 +75,9 @@ export function HowItWorks({ heading, steps }: HowItWorksProps) {
 
         {/* CTA */}
         <div className="text-center mt-12">
-          <a
-            href={WEBINAR_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <SiteCtaLink
             className="inline-block bg-brand-yellow text-brand-black hover:bg-brand-yellow transition-colors duration-200 hover:text-brand-white focus:ring-brand-violet px-6 py-3 text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer"
-          >
-            {WEBINAR_CTA_TEXT}
-          </a>
+          />
         </div>
       </div>
     </section>
