@@ -1,8 +1,23 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { NAV_LINKS, WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
 
 export function Footer() {
+  const pathname = usePathname();
+
+  const handleNavClick = (href: string) => {
+    if (!href.startsWith('/#')) {
+      return;
+    }
+
+    const id = href.slice(2);
+    if (pathname === '/') {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <footer className="bg-brand-white text-brand-black py-12 border-t border-gray-200">
       <div className="container mx-auto px-4">
@@ -61,53 +76,28 @@ export function Footer() {
               Quick Links
             </h4>
             <ul className="space-y-2">
+              {NAV_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link 
+                    href={link.href} 
+                    className="text-gray-600 hover:text-brand-violet transition-colors text-sm"
+                    style={{ fontFamily: 'var(--font-body)' }}
+                    onClick={() => handleNavClick(link.href)}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
               <li>
-                <Link 
-                  href="/" 
+                <a
+                  href={WEBINAR_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-gray-600 hover:text-brand-violet transition-colors text-sm"
                   style={{ fontFamily: 'var(--font-body)' }}
                 >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/about" 
-                  className="text-gray-600 hover:text-brand-violet transition-colors text-sm"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/blog" 
-                  className="text-gray-600 hover:text-brand-violet transition-colors text-sm"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <button 
-                  onClick={() => {
-                    const pathname = window.location.pathname;
-                    if (pathname === '/') {
-                      // Already on home page, just scroll
-                      const waitlistSection = document.getElementById('waitlist-form');
-                      if (waitlistSection) {
-                        waitlistSection.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    } else {
-                      // Navigate to home page with hash
-                      window.location.href = '/#waitlist-form';
-                    }
-                  }}
-                  className="text-gray-600 hover:text-brand-violet transition-colors text-sm text-left cursor-pointer"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  Join Waitlist
-                </button>
+                  {WEBINAR_CTA_TEXT}
+                </a>
               </li>
             </ul>
           </div>

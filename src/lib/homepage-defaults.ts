@@ -239,7 +239,7 @@ export const defaultHomepageData = {
 
   download_cta: {
     heading: "Ready to own your era?",
-    subheading: "Join the waitlist and be the first to know when Mi-Era launches.",
+    subheading: "Join a webinar and see how Mi-Era helps teens build focus and confidence.",
   },
 
   faq: {

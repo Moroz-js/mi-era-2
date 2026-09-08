@@ -4,15 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from './Button';
-import { WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
-
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/#book', label: 'Book' },
-  { href: '/#reviews', label: 'Reviews' },
-  { href: '/blog', label: 'Blog' },
-];
+import { NAV_LINKS, WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -64,7 +56,7 @@ export function Header() {
 
             {/* Desktop Navigation - Centered */}
             <nav className="hidden md:flex items-center space-x-6 lg:space-x-8 absolute left-1/2 transform -translate-x-1/2">
-              {navLinks.map((link) => (
+              {NAV_LINKS.map((link) => (
                 <Link 
                   key={link.href}
                   href={link.href} 
@@ -136,7 +128,7 @@ export function Header() {
         style={{ top: '73px' }}
       >
         <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-          {navLinks.map((link) => (
+          {NAV_LINKS.map((link) => (
             <Link 
               key={link.href}
               href={link.href} 

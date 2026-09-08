@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '../ui/Button';
+import { WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
 
 interface FAQItem {
   question: string;
@@ -18,10 +19,6 @@ export function FAQ({ heading, items }: FAQProps) {
 
   const toggleItem = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
-  };
-
-  const scrollToWaitlist = () => {
-    document.getElementById('waitlist-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
@@ -97,9 +94,16 @@ export function FAQ({ heading, items }: FAQProps) {
 
           {/* CTA */}
           <div className="text-center mt-12">
-            <Button variant="primary" size="lg" onClick={scrollToWaitlist}>
-              Join the waitlist
-            </Button>
+            <a
+              href={WEBINAR_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block"
+            >
+              <Button variant="primary" size="lg">
+                {WEBINAR_CTA_TEXT}
+              </Button>
+            </a>
           </div>
         </div>
       </div>
