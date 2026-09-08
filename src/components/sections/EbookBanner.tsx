@@ -5,7 +5,7 @@ import { Button } from '../ui/Button';
 
 export function EbookBanner() {
   return (
-    <section className="pt-16 pb-0 md:pt-24 md:pb-0 bg-brand-white">
+    <section id="book" className="scroll-mt-24 pt-16 pb-0 md:pt-24 md:pb-0 bg-brand-white">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="bg-brand-yellow border-2 border-brand-black rounded-2xl p-6 md:p-8">

@@ -1,35 +1,51 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Button } from './Button';
+import { WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/#book', label: 'Book' },
+  { href: '/#reviews', label: 'Reviews' },
+  { href: '/blog', label: 'Blog' },
+];
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const router = useRouter();
   const pathname = usePathname();
 
-  const scrollToWaitlist = () => {
-    // Check if we're on the home page
-    if (pathname === '/') {
-      // Already on home page, just scroll
-      const waitlistForm = document.getElementById('waitlist-form');
-      if (waitlistForm) {
-        waitlistForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    } else {
-      // Navigate to home page with hash
-      router.push('/#waitlist-form');
-      // Wait for navigation and then scroll
-      setTimeout(() => {
-        const waitlistForm = document.getElementById('waitlist-form');
-        if (waitlistForm) {
-          waitlistForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
+  useEffect(() => {
+    if (pathname !== '/') {
+      return;
     }
+
+    const hash = window.location.hash.replace('#', '');
+    if (!hash) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [pathname]);
+
+  const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false);
+
+    if (!href.startsWith('/#')) {
+      return;
+    }
+
+    const id = href.slice(2);
+    if (pathname === '/') {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -47,39 +63,34 @@ export function Header() {
             </Link>
 
             {/* Desktop Navigation - Centered */}
-            <nav className="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
-              <Link 
-                href="/" 
-                className="text-brand-black hover:text-brand-violet transition-colors font-medium"
-                style={{ fontFamily: 'var(--font-body)' }}
-              >
-                Home
-              </Link>
-              <Link 
-                href="/about" 
-                className="text-brand-black hover:text-brand-violet transition-colors font-medium"
-                style={{ fontFamily: 'var(--font-body)' }}
-              >
-                About
-              </Link>
-              <Link 
-                href="/blog" 
-                className="text-brand-black hover:text-brand-violet transition-colors font-medium"
-                style={{ fontFamily: 'var(--font-body)' }}
-              >
-                Blog
-              </Link>
+            <nav className="hidden md:flex items-center space-x-6 lg:space-x-8 absolute left-1/2 transform -translate-x-1/2">
+              {navLinks.map((link) => (
+                <Link 
+                  key={link.href}
+                  href={link.href} 
+                  className="text-brand-black hover:text-brand-violet transition-colors font-medium"
+                  style={{ fontFamily: 'var(--font-body)' }}
+                  onClick={() => handleNavClick(link.href)}
+                >
+                  {link.label}
+                </Link>
+              ))}
             </nav>
 
             {/* CTA Button */}
             <div className="hidden md:block">
-              <Button 
-                variant="primary" 
-                size="sm"
-                onClick={scrollToWaitlist}
+              <a
+                href={WEBINAR_URL}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                Join the waitlist
-              </Button>
+                <Button 
+                  variant="primary" 
+                  size="sm"
+                >
+                  {WEBINAR_CTA_TEXT}
+                </Button>
+              </a>
             </div>
 
             {/* Mobile Menu Button */}
@@ -125,38 +136,31 @@ export function Header() {
         style={{ top: '73px' }}
       >
         <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-          <Link 
-            href="/" 
-            className="text-brand-black hover:text-brand-violet transition-colors font-medium"
-            style={{ fontFamily: 'var(--font-body)' }}
+          {navLinks.map((link) => (
+            <Link 
+              key={link.href}
+              href={link.href} 
+              className="text-brand-black hover:text-brand-violet transition-colors font-medium"
+              style={{ fontFamily: 'var(--font-body)' }}
+              onClick={() => handleNavClick(link.href)}
+            >
+              {link.label}
+            </Link>
+          ))}
+          <a
+            href={WEBINAR_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            Home
-          </Link>
-          <Link 
-            href="/about" 
-            className="text-brand-black hover:text-brand-violet transition-colors font-medium"
-            style={{ fontFamily: 'var(--font-body)' }}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            About
-          </Link>
-          <Link 
-            href="/blog" 
-            className="text-brand-black hover:text-brand-violet transition-colors font-medium"
-            style={{ fontFamily: 'var(--font-body)' }}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Blog
-          </Link>
-          <Button 
-            variant="primary" 
-            size="md"
-            onClick={scrollToWaitlist}
-            className="w-full"
-          >
-            Join the waitlist
-          </Button>
+            <Button 
+              variant="primary" 
+              size="md"
+              className="w-full"
+            >
+              {WEBINAR_CTA_TEXT}
+            </Button>
+          </a>
         </div>
       </nav>
     </>

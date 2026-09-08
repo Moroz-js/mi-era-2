@@ -1,7 +1,5 @@
-'use client';
-
 import React from 'react';
-import { Button } from '../ui/Button';
+import { WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
 
 interface Step {
   number: number;
@@ -15,10 +13,6 @@ interface HowItWorksProps {
 }
 
 export function HowItWorks({ heading, steps }: HowItWorksProps) {
-  const scrollToWaitlist = () => {
-    document.getElementById('waitlist-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
   return (
     <section className="bg-brand-violet py-16 md:py-24 relative overflow-hidden">
       {/* Decorative stars */}
@@ -81,9 +75,14 @@ export function HowItWorks({ heading, steps }: HowItWorksProps) {
 
         {/* CTA */}
         <div className="text-center mt-12">
-          <button onClick={scrollToWaitlist} className="bg-brand-yellow text-brand-black hover:bg-brand-yellow transition-colors duration-200 hover:text-brand-white focus:ring-brand-violet px-6 py-3 text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer">
-              Join the waitlist
-          </button>
+          <a
+            href={WEBINAR_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-brand-yellow text-brand-black hover:bg-brand-yellow transition-colors duration-200 hover:text-brand-white focus:ring-brand-violet px-6 py-3 text-base rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer"
+          >
+            {WEBINAR_CTA_TEXT}
+          </a>
         </div>
       </div>
     </section>

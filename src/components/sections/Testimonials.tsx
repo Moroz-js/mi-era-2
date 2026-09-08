@@ -14,7 +14,7 @@ interface TestimonialsProps {
 
 export function Testimonials({ heading, testimonials }: TestimonialsProps) {
   return (
-    <section className="py-16 md:py-24 bg-brand-white relative overflow-hidden">
+    <section id="reviews" className="scroll-mt-24 py-16 md:py-24 bg-brand-white relative overflow-hidden">
       {/* Decorative stars */}
       <img src="/assets/star-3.png" alt="" className="absolute top-[5%] md:top-[10%] left-[6%] w-10 h-10 opacity-35 z-0" />
       <img src="/assets/star-1.png" alt="" className="absolute top-[18%] right-[8%] w-6 h-6 opacity-35 hidden md:inline z-0" />

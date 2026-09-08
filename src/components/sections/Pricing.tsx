@@ -1,7 +1,4 @@
-'use client';
-
 import React from 'react';
-import { Button } from '../ui/Button';
 
 interface PricingPlan {
   name: string;
@@ -25,10 +22,6 @@ interface PricingProps {
 }
 
 export function Pricing({ heading, subheading, plans }: PricingProps) {
-  const scrollToWaitlist = () => {
-    document.getElementById('waitlist-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
   const visiblePlans = plans.filter((p) => p.visible !== false);
   const isTwoCol = visiblePlans.length === 2;
 
@@ -158,22 +151,6 @@ export function Pricing({ heading, subheading, plans }: PricingProps) {
                   ))}
                 </ul>
                 
-                {/* CTA Button */}
-                <Button 
-                  variant={plan.highlighted ? 'primary' : plan.isAddon ? 'primary' : 'secondary'}
-                  size="lg"
-                  onClick={scrollToWaitlist}
-                  className={`w-full ${
-                    plan.highlighted 
-                      ? '!bg-brand-white !text-brand-black hover:!bg-brand-violet hover:!text-brand-white' 
-                      : plan.isAddon
-                        ? '!bg-brand-violet !text-brand-white hover:!bg-brand-yellow hover:!text-brand-black'
-                        : 'hover:!bg-brand-violet hover:!text-brand-white'
-                  }`}
-                >
-                  {plan.ctaText}
-                </Button>
-
                 {/* Footnote */}
                 {plan.footnote && (
                   <p 

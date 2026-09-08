@@ -1,7 +1,13 @@
 'use client';
 
 import React from 'react';
-import { WaitlistForm } from '../ui/WaitlistForm';
+import { Button } from '../ui/Button';
+import {
+  APP_STORE_URL,
+  GOOGLE_PLAY_URL,
+  WEBINAR_CTA_TEXT,
+  WEBINAR_URL,
+} from '@/lib/site-links';
 
 interface DownloadCTAProps {
   heading: string;
@@ -29,14 +35,24 @@ export function DownloadCTA({ heading, subheading }: DownloadCTAProps) {
             </p>
           )}
           
-          {/* Waitlist Form */}
           <div className="mb-12">
-            <WaitlistForm />
+            <a
+              href={WEBINAR_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block"
+            >
+              <Button variant="primary" size="lg">
+                {WEBINAR_CTA_TEXT}
+              </Button>
+            </a>
           </div>
           
           <div className="grid w-full grid-cols-2 items-center gap-2 sm:flex sm:justify-center sm:gap-4">
             <a 
-              href="#" 
+              href={APP_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex h-[clamp(2.75rem,13vw,3.5rem)] min-w-0 items-center justify-center transition-opacity hover:opacity-80"
               aria-label="Download on the App Store"
             >
@@ -48,7 +64,9 @@ export function DownloadCTA({ heading, subheading }: DownloadCTAProps) {
             </a>
             
             <a 
-              href="#" 
+              href={GOOGLE_PLAY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex h-[clamp(2.75rem,13vw,3.5rem)] min-w-0 items-center justify-center transition-opacity hover:opacity-80"
               aria-label="Get it on Google Play"
             >

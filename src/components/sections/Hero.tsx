@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button } from '../ui/Button';
 import { AbstractVisual } from '../ui/AbstractVisual';
+import { WEBINAR_CTA_TEXT, WEBINAR_URL } from '@/lib/site-links';
 
 interface HeroProps {
   tagline: string;
@@ -16,13 +17,7 @@ interface HeroProps {
   }>;
 }
 
-export function Hero({ tagline, heading, subheading, ctaText, screenshots }: HeroProps) {
-  const handleCTAClick = () => {
-    const waitlistForm = document.getElementById('waitlist-form');
-    if (waitlistForm) {
-      waitlistForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+export function Hero({ tagline, heading, subheading, screenshots }: HeroProps) {
 
   return (
     <section className="bg-brand-white text-brand-black py-16 md:py-24">
@@ -58,13 +53,19 @@ export function Hero({ tagline, heading, subheading, ctaText, screenshots }: Her
             </p>
 
             {/* CTA Button */}
-            <Button 
-              variant="primary" 
-              size="lg"
-              onClick={handleCTAClick}
+            <a
+              href={WEBINAR_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block"
             >
-              {ctaText}
-            </Button>
+              <Button 
+                variant="primary" 
+                size="lg"
+              >
+                {WEBINAR_CTA_TEXT}
+              </Button>
+            </a>
           </div>
 
           {/* Right Column - App Screenshots */}
