@@ -10,6 +10,7 @@ const sections = [
   { key: 'how_it_works', label: 'How It Works', description: '4-step process', icon: '⚙️' },
   { key: 'testimonials', label: 'Testimonials', description: 'What people are saying', icon: '💬' },
   { key: 'pricing', label: 'Pricing', description: '3 plans with features & CTA', icon: '💳' },
+  { key: 'download_cta', label: 'Download CTA', description: 'Ready to own your era? heading and text', icon: '📱' },
   { key: 'faq', label: 'FAQ', description: 'Questions & answers', icon: '❓' },
 ];
 

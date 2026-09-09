@@ -9,6 +9,7 @@ import { HowItWorksForm } from '../_forms/HowItWorksForm';
 import { TestimonialsForm } from '../_forms/TestimonialsForm';
 import { FAQForm } from '../_forms/FAQForm';
 import { PricingForm } from '../_forms/PricingForm';
+import { DownloadCtaForm } from '../_forms/DownloadCtaForm';
 
 const sectionLabels: Record<string, string> = {
   hero: 'Hero Section',
@@ -18,6 +19,7 @@ const sectionLabels: Record<string, string> = {
   how_it_works: 'How It Works',
   testimonials: 'Testimonials',
   pricing: 'Pricing',
+  download_cta: 'Download CTA',
   faq: 'FAQ',
 };
 
@@ -43,6 +45,8 @@ export default function EditHomepageSectionPage() {
         return <TestimonialsForm />;
       case 'pricing':
         return <PricingForm />;
+      case 'download_cta':
+        return <DownloadCtaForm />;
       case 'faq':
         return <FAQForm />;
       default:
