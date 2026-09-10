@@ -1,8 +1,6 @@
-'use client';
-
 import React from 'react';
 import { AbstractVisual } from '../ui/AbstractVisual';
-import { SiteCtaButton } from '../ui/SiteCta';
+import { StoreBadges } from '../ui/StoreBadges';
 
 interface HeroProps {
   tagline: string;
@@ -50,8 +48,7 @@ export function Hero({ tagline, heading, subheading, screenshots }: HeroProps) {
               {subheading}
             </p>
 
-            {/* CTA Button */}
-            <SiteCtaButton variant="primary" size="lg" />
+            <StoreBadges />
           </div>
 
           {/* Right Column - App Screenshots */}
